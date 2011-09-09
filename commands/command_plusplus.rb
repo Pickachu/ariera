@@ -16,9 +16,7 @@ message :chat?, :body => /[+][\d]/ do |m|
       else
         r.body += "\n"
       end
-      
-      puts term.inspect
-      
+            
       r.body += "Woohoo\!\!\! #{term.term} agora com [#{term.score}]"
     end
   end

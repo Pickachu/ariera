@@ -1,7 +1,7 @@
-message :chat?, :body => /[-][\d]/ do |m|
+message :chat?, :body => /-\d/ do |m|
   puts 'executing: minus minus'
   r = m.reply
-  minuses = m.body.scan /([^\b\s]+)(?=[-][-])/
+  minuses = m.body.scan /([^\b\s]+)(?=-\d)/
   
   minuses.each do |minus|
     term = Term.find_or_create_by_term(minus[0])
@@ -16,8 +16,6 @@ message :chat?, :body => /[-][\d]/ do |m|
       else
         r.body += "\n"
       end
-      
-      puts term.inspect
       
       r.body += "Woohoo\!\!\! #{term.term} agora com [#{term.score}]"
     end

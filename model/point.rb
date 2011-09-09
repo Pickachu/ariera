@@ -1,3 +1,5 @@
 class Point < ActiveRecord::Base
-      belongs_to :pointable, :polymorphic => true
+  validates_presence_of :reason
+
+  belongs_to :pointable, :polymorphic => true
 end

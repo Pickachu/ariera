@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-message :chat?, :body => /^(\[[^\\]+\])? pontuar .+/i do |m|
+message :chat?, :body => /^(\[[^\\]+\] )?pontuar .+/i do |m|
   puts 'executing: pontuar'
 
   r = m.reply
