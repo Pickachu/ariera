@@ -1,4 +1,4 @@
-message :chat?, :body => /[+][\d]/ do |m|
+Ariera.message :chat?, :body => /[+][\d]/ do |m|
   puts 'executing: plus plus'
 
   r = m.reply
@@ -11,15 +11,9 @@ message :chat?, :body => /[+][\d]/ do |m|
     term.score += 1
     
     if term.save
-      if r.body.nil?
-        r.body = ''
-      else
-        r.body += "\n"
-      end
-            
-      r.body += "Woohoo\!\!\! #{term.term} agora com [#{term.score}]"
+      r.body = "\n Woohoo\!\!\! #{term.term} agora com #{term.score} pontos."
     end
   end
   
-  write_to_stream r
+  Ariera.write_to_stream r
 end

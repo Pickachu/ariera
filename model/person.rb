@@ -1,5 +1,5 @@
 class Person < ActiveRecord::Base
-  validates_uniqueness_of :name
+  validates :name, :uniqueness => true, :presence => true
 
   has_many :points, :as => :pointable
   has_many :votes, :as => :votable

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-message :chat?, :body => /^(\[[^\\]+\] )?pontuar .+/i do |m|
+Ariera.message :chat?, :body => /^(\[[^\\]+\] )?pontuar .+/i do |m|
   puts 'executing: pontuar'
 
   r = m.reply
@@ -16,7 +16,7 @@ message :chat?, :body => /^(\[[^\\]+\] )?pontuar .+/i do |m|
       person.score += 1		  
       
       if person.save
-        r.body = "Woohoo\! #{person.name.capitalize} agora com #{person.score} pontos, porque #{point.reason}"
+        r.body = "Woohoo\! #{person.name.capitalize} agora com #{person.score} pontos, por #{point.reason}"
       else
         r.body = 'Erro ao pontuar pessoa'
       end
@@ -27,5 +27,5 @@ message :chat?, :body => /^(\[[^\\]+\] )?pontuar .+/i do |m|
     r.body = 'Pessoa não encontrada: ' + params[1]
   end
 
-  write_to_stream r
+  Ariera.write_to_stream r
 end

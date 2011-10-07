@@ -1,9 +1,9 @@
-message :chat?, :body =>  /(\[[^\]]*\] )?domo/i do |m|
+Ariera.message :chat?, :body =>  /(\[[^\]]*\] )?domo/i do |m|
   puts 'executing: domo'
 
   r = m.reply
   r.body = 'kun'
-  write_to_stream r
+  Ariera.write_to_stream r
 
   false
 end

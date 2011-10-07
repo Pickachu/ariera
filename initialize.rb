@@ -1,9 +1,11 @@
-
 # Frameworks and libraries
 require 'rubygems'
-require 'blather/client'
+require 'blather'
 require 'active_record'
+ActiveRecord::Base # Bug on active record outside rails
 
+# Sincronyse output
+$stdout.sync = true
 
 # Active Record Configuration
 ActiveRecord::Base.establish_connection(
@@ -13,7 +15,7 @@ ActiveRecord::Base.establish_connection(
   :password => 'WVV9974c',
   :host     => 'database.izap.com.br')
 
-ActiveRecord::Base.logger = Logger.new(STDERR)
+#ActiveRecord::Base.logger = Logger.new(STDERR)
 
 # Active Record Models
 require 'model/person.rb'
@@ -21,6 +23,9 @@ require 'model/point.rb'
 require 'model/term.rb'
 require 'model/food_establishment.rb'
 require 'model/vote.rb'
+require 'model/poll.rb'
 
-
-
+# Library Items
+require 'library/ariera.rb' 
+require 'library/command.rb'
+require 'library/action.rb'

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-message :chat?, [
+Ariera.message :chat?, [
                  {:body => /^(\[[^\\]+\] )?almo[çc]o.*/i}, 
                  {:body => /^(\[[^\\]+\] )?suggest .+/i}, 
                  {:body => /^(\[[^\\]+\] )?bora n[ao] .+/i}, 
-                 {:body => /^(\[[^\\]+\] )?quero ir .+/i}
+                 {:body => /^(\[[^\\]+\] )?quero ir no .+/i}
                 ] do |m| 
 
   # {:body => /^(\[[^\\]+\] )?almo[çc]o.*/i, :body => '[Heitor] almoco', , :body => /^(\[[^\\]+\] )?quero ir .+/i} do |m|
@@ -44,16 +44,24 @@ message :chat?, [
       r.body = "\n\n== Almoço do dia \n"
       r.body += sprintf("%20s     %10s\n", 'Local', 'Votos')
       
-      food_establishments = FoodEstablishment.joins(:votes).where(['votes.updated_at BETWEEN (?) AND (?)', Time.mktime(Time.now.year, Time.now.month, Time.now.day), Time.mktime(Time.now.year, Time.now.month, Time.now.day, 23, 59)] )
+      food_establishments = FoodEstablishment.joins(:votes).where(['votes.updated_at BETWEEN (?) AND (?)', Time.mktime(Time.now.year, Time.now.month, Time.now.day), Time.mktime(Time.now.year, Time.now.month, Time.now.day, 23, 59)] ).group('votes.votable_id')
 
+      names = []
       food_establishments.each do |food_establishment|
-          r.body += sprintf("%20s     %10s", food_establishment.name.capitalize, food_establishment.votes.today.count)
+        food_establishment.votes.today.each { |vote|  
+          names << vote.person.name
+        }
+        r.body += sprintf("%20s     %10s %s\n", food_establishment.name.capitalize, food_establishment.votes.today.count, names.join(', '))
+        names = []
       end
     end
-
   else
-    r.body = 'Pessoa não encontrada para efetuar voto: ' + name
+    unless name.nil?
+      r.body = 'Pessoa não encontrada para efetuar voto: ' + name.to_s
+    else
+      r.body = 'Nome invalido de pessoa'
+    end
   end
 
-  write_to_stream r
+  Ariera.write_to_stream r
 end
