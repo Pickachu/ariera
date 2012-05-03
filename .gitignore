@@ -1,0 +1,6 @@
+.*
+*~
+*#
+config/database.yml
+config/xmpp.yml
+.rvmrc

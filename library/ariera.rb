@@ -2,11 +2,13 @@ require 'blather/client/dsl'
 
 module Ariera
   extend Blather::DSL
+                                                               
+  def self.run
+    authentication = configuration[:xmpp]
+    setup authentication["login"], authentication['password'], authentication["host"]
+    client.run                                                                   
+  end
 
-  setup 'heitorsalazar@gmail.com', ')74193456((74193456)', 'talk.google.com'
-  
-  def self.run; client.run; end
-    
   when_ready do
     puts 'Connected'
     
@@ -16,4 +18,12 @@ module Ariera
     # create a room
     Room.new 'domo'
   end
-end
+
+  def self.configuration=(value)
+    @configuration = value
+  end                 
+
+  def self.configuration
+    @configuration
+  end                   
+end   
