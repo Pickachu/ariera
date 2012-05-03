@@ -24,8 +24,13 @@ require 'model/term.rb'
 require 'model/food_establishment.rb'
 require 'model/vote.rb'
 require 'model/poll.rb'
+require 'model/cowboy.rb'
+require 'model/rule.rb'
 
 # Library Items
 require 'library/ariera.rb' 
 require 'library/command.rb'
 require 'library/action.rb'
+
+autoload :Room, 'library/room'
+autoload :X, 'library/stanz/xa'

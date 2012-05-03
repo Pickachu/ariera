@@ -10,13 +10,14 @@ module Command
 
     # Make regexps to match message
     @guards.each do |regexp|
-      guards << {:body => Regexp.new(prefix + regexp)}
+      guards << {:body => Regexp.new(prefix + regexp, Regexp::IGNORECASE)}
     end
 
     # TODO Implement before filter
     # Parse intial message
     prepare = lambda do |m|
-      puts 'prepared'
+      puts "#{m.from}: #{m.body}"
+
       params = {:name => m.body.scan(/^(?:\[([^\\]+)\] )?/).flatten.first }
       params[:name] = 'anonymous' if params[:name].nil?
       body = m.body.gsub Regexp.new(prefix), ''
@@ -36,14 +37,30 @@ module Command
         @parameters.each do |name|
           params[name] = unamed_params.shift
         end
+
+        # Add unamed parameters to the last parameters
+        if unamed_params.any?
+          last = {:name => '', :modifier => ''}
+          if params[@parameters.last]
+            params[@parameters.last].names.each do |name|
+              last[name.to_sym] = params[@parameters.last][name] unless params[@parameters.last][name].nil?
+            end
+          end
+              
+          unamed_params.each do |match|
+            last[:name] += ' ' + match[:name].to_s unless match[:name].nil?
+            last[:modifier] += ' ' + match[:modifier].to_s unless match[:modifier].nil?
+          end
+
+          last[:name].strip!
+          last[:modifier].strip!
+
+          params[@parameters.last] = last
+        end
       end
       
-      params[:unamed] = unamed_params unless unamed_params.nil? or unamed_params.empty?
-      
-
-      puts 'Parametros: ' + params.inspect
-
       begin
+        puts 'executing: ' + self.class.to_s
         r = self.execute m, params
         r.body = 'Tentativas dimais ao parsear resposta!' unless tries > 0
         write_to_stream r unless r.nil?

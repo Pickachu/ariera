@@ -5,10 +5,15 @@ class CommandAdd
   def initialize
     @guards = ['adicionar .+', 'add .+']
     @parameters = [:type, :entity]
+
+    listen
+  end
+
+  def help
+    {:syntax => 'adicionar <entidade> <nome>', :variants => [:add, :adicionar], :description => 'Adiciona entidade'}
   end
 
   def execute m, params
-    puts 'executing: fail'
     r = m.reply
     
     case params[:type][:name]
@@ -39,4 +44,4 @@ class CommandAdd
 end
 
 # TODO Instantiate classes out of here
-CommandAdd.new.listen
+CommandAdd.new

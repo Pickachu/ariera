@@ -1,31 +1,48 @@
 # -*- coding: utf-8 -*-
-Ariera.message :chat?, :body => /^(\[[^\\]+\] )?pontuar .+/i do |m|
-  puts 'executing: pontuar'
+class CommandPonctuate
+  include Command
 
-  r = m.reply
-  params = m.body.gsub(/^\[[^\\]+\] /, '').scan /"[^"]*"|'[^']*'|[^"'\s]+/
-  person = Person.find_by_name(params[1].downcase)
-  
-  if person
-    if params[2]
-      point = Point.new
-      point.reason = params[2]
-      point.amount = 1		  
-      
-      person.points << point
-      person.score += 1		  
-      
-      if person.save
-        r.body = "Woohoo\! #{person.name.capitalize} agora com #{person.score} pontos, por #{point.reason}"
-      else
-        r.body = 'Erro ao pontuar pessoa'
-      end
-    else
-      r.body = 'Motivo da pontuação não informado.'
-    end
-  else
-    r.body = 'Pessoa não encontrada: ' + params[1]
+  def initialize
+    @guards = ['pontuar .+']
+    @parameters = [:person, :reason]
+
+    listen
   end
 
-  Ariera.write_to_stream r
+  def execute m, params
+    r = m.reply
+    voter = Person.find_by_name(params[:name].downcase)
+    person = Person.find_by_name(params[:person][:name].downcase) unless params[:person].nil?
+    reason = params[:reason][:name]  unless params[:reason].nil?
+
+    if voter
+      if person
+        if reason
+          point = Point.new
+          point.reason = reason
+          point.amount = 1
+          point.person = voter
+          
+          person.points << point
+          person.score += 1		  
+          
+          if person.save
+            r.body = "Woohoo\! #{person.name.capitalize} agora com #{person.score} pontos, por #{point.reason}"
+          else
+            r.body = 'Erro ao pontuar pessoa'
+          end
+        else
+          r.body = 'Motivo da pontuação não informado.'
+        end
+      else
+        r.body = 'Pessoa não encontrada: ' + params[:person][:name]
+      end
+    else
+      r.body = 'Votador inválido: ' + params[:name]
+    end
+    
+    r
+  end
 end
+
+CommandPonctuate.new

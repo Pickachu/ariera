@@ -15,7 +15,6 @@ class CommandVolume
 
   def execute m, params
     # @todo Encapsular na classe command daqui
-    puts 'executing volume'
     r = m.reply
     puts params.inspect
 
@@ -50,6 +49,7 @@ class CommandVolume
       self.volume = amount
     end
 
+
     r.body = bar()
     r
   end
@@ -62,14 +62,12 @@ class CommandVolume
   
   def volume=(value)
     value *= 7.0 / 20.0
-    puts 'setting volume to ' + value.to_s
     `osascript -e "set Volume #{value}"`
     
     @volume = volume
   end
   
   def volume
-    puts 'getting value of ' + `osascript -e "output volume of (get volume settings)"`
     `osascript -e "output volume of (get volume settings)"`.to_f * 20.0 / 100.0
   end
 end

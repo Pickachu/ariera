@@ -1,8 +1,9 @@
 require 'blather/client/dsl'
+
 module Ariera
   extend Blather::DSL
 
-  setup 'heitor.salazar@izap.com.br', '74193456', 'talk.google.com'
+  setup 'heitorsalazar@gmail.com', ')74193456((74193456)', 'talk.google.com'
   
   def self.run; client.run; end
     
@@ -11,5 +12,8 @@ module Ariera
     
     # include commands
     Dir["commands/*.rb"].each {|file| require file}
+
+    # create a room
+    Room.new 'domo'
   end
 end

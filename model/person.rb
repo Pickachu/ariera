@@ -4,4 +4,5 @@ class Person < ActiveRecord::Base
   has_many :points, :as => :pointable
   has_many :votes, :as => :votable
   has_many :choices, :class_name => "Vote"
+  has_one :cowboy
 end

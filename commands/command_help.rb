@@ -11,18 +11,19 @@ class CommandHelp
     r = m.reply
     
     commands = [
-                ["pontuar|fail <pessoa> <motivo>", "Adicionar|Remover ponto para pessoa"]
+                ["pontuar | fail <pessoa> <motivo...>", "Adicionar|Remover ponto para pessoa"],
+                ["<termo>+1 | <termo>-1", "Adicionar ponto para termo"],
+                ["roubar <ladrão> <vítima> <motivo...>", "Roubar pponto de pessoa para pessoa"],
+                ["almoco [estabelecimento]", "Lista / Vota em estabelecimento para o almoço"],
+                ["play | pause | next | previous | again", "Começa ou pausa ou passa ou volta ou toca dinovo a música atual"],
+                ["volume+ | volume- | volume <valor>", "Começa ou pausa ou passa para próxima música"]
                ]
 
     body = "Comandos\n"
     commands.each do |command|
-      body += format('%s => %s', *command)
+      body += format("%s => %s\n", *command)
     end
-             
-    
-    body += format("%-40s %-s \n", "<termo>+1 ou <termo>-1", "Adicionar ponto para termo")
-    body += format("%-40s %-s \n", "almoco [estabelecimento]", "Lista / Vota em estabelecimento para o almoço")
-    body += format("%-40s %-s \n", "play|pause|next", "Começa ou pausa ou passa para próxima música")
+
     body += format("%-40s %-s \n", "volume+ | volume- | volume <valor>", "Começa ou pausa ou passa para próxima música")
     body += format("%-40s %-s \n", "say|diga|fale|speak <texto>", "Diz o <texto> especificado")
     
@@ -32,7 +33,7 @@ class CommandHelp
     
     body += "\n\nEntidades\n"
     body += "Entidades disponíveis: estabelecimento, pessoa\n"
-    body += format("%-40s %-s \n", "adicionar <entidade> <nome>", "Adiciona entidade")
+    body += format("%-40s %-s \n", "adicionar <entidade> <nome>", "Adiciona entidade") # Done
     body += format("%-40s %-s \n", "listar <entidade> <nome>", "Lista registros para entidade (Suporta todas)")
     
   

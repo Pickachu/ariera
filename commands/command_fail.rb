@@ -20,7 +20,8 @@ class CommandFail
       if params[:reason]
         point = Point.new
         point.reason = params[:reason][:name]
-        point.amount = -1		  
+        point.amount = -1
+        point.person = voter
 
         person.points << point
         person.score -= 1		  
@@ -35,7 +36,7 @@ class CommandFail
       end
     else
       if voter
-        r.body = 'Pessoa não encontrada: ' + params[:person]
+        r.body = 'Pessoa não encontrada: ' + params[:person][:name]
       else
         r.body = 'Votador inválido: ' + params[:name]
       end

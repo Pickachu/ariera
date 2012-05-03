@@ -1,13 +1,26 @@
-Ariera.message :chat?, [
-                 {:body => /^(\[[^\\]+\] )?say.*/i},
-                 {:body => /^(\[[^\\]+\] )?speak.*/i},
-                 {:body => /^(\[[^\\]+\] )?diga.*/i},
-                 {:body => /^(\[[^\\]+\] )?fale.*/i}
-                ] do |m|
-  params = m.body.gsub(/^\[[^\\]+\] /, '').scan /"[^"]*"|'[^']*'|[^"'\s]+/
-  
-  params.shift
-  speak = params.join(' ')
+# -*- coding: utf-8 -*-
+class CommandSay
+  include Command
 
-  system("say '#{speak}'")
-end 
+  def initialize
+    @guards = ['say .+', 'speak .+', 'diga .+', 'fale .+']
+    @parameters = [:message]
+
+    listen
+  end
+
+  def execute m, params
+    r = m.reply
+    
+    if params[:message]
+      system("say '#{params[:message][:name]}'")    
+    else
+      r.body = "Texto não informado para pronunciar"
+    end
+    
+    r
+  end
+end
+
+# TODO Instantiate classes out of here
+CommandSay.new
