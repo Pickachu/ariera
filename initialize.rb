@@ -19,23 +19,24 @@ ActiveRecord::Base.establish_connection(database[ENVIRONMENT])
 #ActiveRecord::Base.logger = Logger.new(STDERR)
 
 # Active Record Models
-require 'model/person.rb'
-require 'model/point.rb'
-require 'model/term.rb'
-require 'model/food_establishment.rb'
-require 'model/vote.rb'
-require 'model/poll.rb'
-require 'model/cowboy.rb'
-require 'model/rule.rb'
+require_relative 'model/person'
+require_relative 'model/point'
+require_relative 'model/term'
+require_relative 'model/food_establishment'
+require_relative 'model/vote'
+require_relative 'model/poll'
+require_relative 'model/cowboy'
+require_relative 'model/rule'
 
 # Library Items
-require 'library/ariera.rb' 
-require 'library/command.rb'
-require 'library/action.rb'
+$LOAD_PATH << File.expand_path('library')
 
+require 'ariera' 
+require 'command'
+require 'action'
 
-autoload :Room, 'library/room'
-autoload :X, 'library/stanz/xa'
+autoload :Room, 'room'
+autoload :X, 'stanz/xa'
 
 Ariera.configuration = {
   :database => database[ENVIRONMENT], 
