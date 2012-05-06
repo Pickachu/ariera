@@ -16,8 +16,12 @@ module Ariera
     Dir["commands/*.rb"].each {|file| require file}
 
     # create a room
-    Room.new 'domo'
+    # Room.new 'domo'
   end
+
+  message do |m|
+    puts 'received' + m.inspect
+  end                        
 
   def self.configuration=(value)
     @configuration = value

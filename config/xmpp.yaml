@@ -1,10 +1,34 @@
 development:
-  host: talk.google.com
-  port: 5222
-  login: heitor.salazar@izap.com.br
-  password: 74193456
-  
-  	 		     
-
-
-
+  gtalk:
+    host: talk.google.com
+    port: 5222
+    login: heitorsalazar@gmail.com
+    password: )74193456((74193456)
+  gapps:
+    host: talk.google.com
+    port: 5222
+    login: heitor.salazar@izap.com.br
+    password: 74193456
+  facebook:
+    host: chat.facebook.com
+    port: 5222
+    login: heitorsalazar@chat.facebook.com
+    password: AAAB5mBroS8kBAAFLmZCetTZBnbx3GvYAavIfEDOj1TcFnEgZBsRtRZCEFkGy4vOxdjSobLJYp5NskIxlhHcLoBAZCPjg58DqCTdb6wmbgOQZDZD
+    api_key: '133694193421257'
+production:
+  gtalk:
+    host: talk.google.com
+    port: 5222
+    login: heitorsalazar@gmail.com
+    password: )74193456((74193456)
+  gapps:
+    host: talk.google.com
+    port: 5222
+    login: heitor.salazar@izap.com.br
+    password: 74193456
+  facebook:
+    host: chat.facebook.com
+    port: 5222
+    login: heitorsalazar@chat.facebook.com
+    password: AAAB5mBroS8kBAAFLmZCetTZBnbx3GvYAavIfEDOj1TcFnEgZBsRtRZCEFkGy4vOxdjSobLJYp5NskIxlhHcLoBAZCPjg58DqCTdb6wmbgOQZDZD
+    api_key: '133694193421257'
