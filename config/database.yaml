@@ -1,6 +1,0 @@
-development:
-  adapter: mysql
-  database: heitor
-  username: izap
-  password: WVV9974c
-  host: database.izap.com.br
