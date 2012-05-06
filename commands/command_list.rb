@@ -3,14 +3,13 @@ class CommandList
   include Command
 
   def initialize
-    require 'active_support/all'
     @guards = ['list .+', 'listar .+']
     @parameters = [:entity, :pagina]
     listen
   end
 
   def listables
-    tables = ActiveRecord::Base.connection.tables
+    tables = Mongoid::Config.master.collection_names
     tables.map {|table| table.singularize}
   end
 

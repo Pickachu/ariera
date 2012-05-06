@@ -1,6 +1,5 @@
 source 'http://rubygems.org'
 
 gem "blather"
-
-gem "activerecord"
-gem "mysql2"
+gem "mongoid"
+gem "bson_ext"

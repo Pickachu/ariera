@@ -12,7 +12,7 @@ class CommandCowboy
     puts 'executing cowboy'
 
     r = m.reply
-    person = Person.find_by_name(params[:name].downcase)
+    person = Person.named(params[:name].downcase).first
     
     unless person.nil?
       unless person.cowboy.nil?

@@ -1,4 +1,7 @@
-class Cowboy < ActiveRecord::Base
-  # validates_presence_of :reason
+class Cowboy
+  include Mongoid::Document
+  field :name, type: String
+
+
   belongs_to :person
 end

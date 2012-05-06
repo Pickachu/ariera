@@ -1,3 +1,7 @@
-class Term < ActiveRecord::Base
-      has_many :points, :as => :pointable
+class Term
+  include Mongoid::Document
+  has_many :points, :as => :pointable
+
+  field :name, type: String
+  field :score, type: Fixnum
 end
