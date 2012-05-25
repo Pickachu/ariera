@@ -1,0 +1,4 @@
+Commandos
+△
+jump - passar musica
+suportar utf8-como alias

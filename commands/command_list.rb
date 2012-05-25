@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-class CommandList
-  include Command
+class Commands::List
+  include Command::Commandable
 
-  def initialize
-    @guards = ['list .+', 'listar .+']
-    @parameters = [:entity, :pagina]
-    listen
-  end
+  guards ['list .+', 'listar .+']
+  parameter :entity
+  parameter :pagina
 
   def listables
     tables = Mongoid::Config.master.collection_names
@@ -17,7 +15,7 @@ class CommandList
     listables.include? entity
   end
 
-  def execute m, params
+  handle do |m, params|
     r = m.reply
     
     pagina = params[:pagina] || {:modifier => 0}
@@ -74,4 +72,4 @@ class CommandList
 end
 
 # TODO Instantiate classes out of here
-CommandList.new
+Commands::List.new

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-class CommandVolume
-  include Command
+class Commands::Volume
+  include Command::Commandable
 
+  guards ['volume(?:([+]|[-])|(?: ([\d]+))?)']
+  parameter :amount
+    
   def initialize
-    @guards = ['volume(?:([+]|[-])|(?: ([\d]+))?)']
-    @parameters = [:amount]
-    listen
+    super
     @volume = volume
   end
 
@@ -13,7 +14,7 @@ class CommandVolume
     pessoa == 'Heitor'
   end
 
-  def execute m, params
+  handle do |m, params|
     # @todo Encapsular na classe command daqui
     r = m.reply
     puts params.inspect
@@ -73,4 +74,4 @@ class CommandVolume
 end
 
 # TODO Instantiate classes out of here
-CommandVolume.new
+Commands::Volume.new

@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-class CommandHelp 
-  include Command
+class Commands::Help 
+  include Command::Commandable
   
-  def initialize
-    @guards = ['ajuda', 'help', 'i need somebody,? help!?', 'bot,? ajuda ai']
-  end
+  guards ['ajuda', 'help', 'i need somebody,? help!?', 'bot,? ajuda ai']
   
-  def execute m, params
+  handle do |m, params|
     puts 'executing: ajuda'
     r = m.reply
     
     commands = [
                 ["pontuar | fail <pessoa> <motivo...>", "Adicionar|Remover ponto para pessoa"],
-                ["<termo>+1 | <termo>-1", "Adicionar ponto para termo"],
+                ["<termo>++ | <termo>--", "Adicionar ponto para termo"],
                 ["roubar <ladrão> <vítima> <motivo...>", "Roubar pponto de pessoa para pessoa"],
                 ["almoco [estabelecimento]", "Lista / Vota em estabelecimento para o almoço"],
                 ["play | pause | next | previous | again", "Começa ou pausa ou passa ou volta ou toca dinovo a música atual"],
@@ -38,8 +36,8 @@ class CommandHelp
     
   
     r.body = body
-    Ariera.write_to_stream r
+    r
   end
 end
 
-CommandHelp.new.listen
+Commands::Help.new

@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-class CommandPoll
-  include Command
+class Commands::Poll
+  include Command::Commandable
 
-  def initialize
-    @guards = ['enquete *+', 'poll *+']
-    @parameters = [:poll]
-  end
+  guards ['enquete *+', 'poll *+']
+  parameter :poll
 
-  def execute m, params
+  handle do |m, params|
     puts 'executing: poll'
     r = m.reply
     
@@ -57,4 +55,4 @@ class CommandPoll
 end
 
 # TODO Instantiate classes out of here
-CommandPoll.new.listen
+Commands::Poll.new

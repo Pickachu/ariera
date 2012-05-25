@@ -4,6 +4,8 @@ class FoodEstablishment
   # validates_presence_of :name
 
   field :name, type: String
+
+  scope :named, lambda { |name| where(:name => name)}
   
   has_many :votes, :as => :votable
 end

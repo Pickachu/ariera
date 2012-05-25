@@ -1,9 +1,11 @@
-# -*- coding: utf-8 -*-
-Ariera.message :chat?, [
-                 {:body => /^(\[[^\\]+\] )?cinema.*/i},
-                 {:body => /^(\[[^\\]+\] )?filmes?.*/i}
-                ] do |m|
-  r = m.reply
-  r.body = 'Comando de gerenciamento de filmes não implementado ainda.'
-  Ariera.write_to_stream r
+class Commands::Filme
+  include Command::Commandable
+
+  guards ['cinema .+', 'filmes .+']
+  
+  handle do |message, params|
+    'Commando de gerenciamento de filmes nao implementado'
+  end
 end
+
+Commands::Filme

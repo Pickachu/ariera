@@ -1,29 +1,28 @@
 # -*- coding: utf-8 -*-
-class CommandFail
-  include Command
+class Commands::Fail
+  include Command::Commandable
 
-  def initialize
-    @guards = ['fail .+']
-    @parameters = [:person, :reason]
+  guard 'fail .+'
+  parameter :person
+  parameter :reason
 
-    listen
-  end
-
-  def execute m, params
-    puts 'executing: fail'
+  handle do |m, params|
     
     r = m.reply
-    voter = Person.find_by_name(params[:name].downcase)
-    person = Person.find_by_name(params[:person][:name].downcase) unless params[:person].nil?
+    voter = Person.where(:identity => Blather::JID.new(m.from).stripped).first
+    person = Person.named(params[:person][:name].downcase).first unless params[:person].nil?
+    reason = params[:reason][:name]  unless params[:reason].nil?
+
     
     if person && voter
-      if params[:reason]
+      if reason
         point = Point.new
-        point.reason = params[:reason][:name]
+        point.reason = reason
         point.amount = -1
         point.person = voter
 
         person.points << point
+        person.score ||= 0
         person.score -= 1		  
         
         if person.save
@@ -47,4 +46,4 @@ class CommandFail
 end
 
 # TODO Instantiate classes out of here
-CommandFail.new
+Commands::Fail.new

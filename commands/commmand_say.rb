@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
-class CommandSay
-  include Command
+class Commands::Say
+  include Command::Commandable
 
-  def initialize
-    @guards = ['say .+', 'speak .+', 'diga .+', 'fale .+']
-    @parameters = [:message]
+  guards = ['say .+', 'speak .+', 'diga .+', 'fale .+']
+  parameter :message
 
-    listen
-  end
-
-  def execute m, params
+  handle do |m, params|
     r = m.reply
     
     if params[:message]
@@ -23,4 +19,4 @@ class CommandSay
 end
 
 # TODO Instantiate classes out of here
-CommandSay.new
+Commands::Say.new

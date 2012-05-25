@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
-class CommandSteal
-  include Command
+class Commands::Steal
+  include Command::Commandable
 
-  def initialize
-    @guards = ['roubar .+']
-    @parameters = [:thief, :victim, :reason]
-
-    listen
-  end
-
-  def execute m, params
+  guard 'roubar .+'
+  parameter :thief
+  parameter :victim
+  parameter :reason
+  
+  handle do |m, params|
     r = m.reply
     voter = Person.find_by_name(params[:name].downcase)
     thief = Person.find_by_name(params[:thief][:name].downcase) unless params[:thief].nil?
@@ -64,4 +62,4 @@ class CommandSteal
   end
 end
 
-CommandSteal.new
+Commands::Steal.new

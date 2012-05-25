@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-class CommandPonctuate
-  include Command
+class Commands::Ponctuate
+  include Command::Commandable
 
-  def initialize
-    @guards = ['pontuar .+']
-    @parameters = [:person, :reason]
+  guard 'pontuar .+'
+  parameter :person
+  parameter :reason
 
-    listen
-  end
-
-  def execute m, params
+  handle do |m, params|
     r = m.reply
-    voter = Person.find_by_name(params[:name].downcase)
-    person = Person.find_by_name(params[:person][:name].downcase) unless params[:person].nil?
+
+    voter = Person.where(:identity => Blather::JID.new(m.from).stripped).first
+    person = Person.named(params[:person][:name].downcase).first unless params[:person].nil?
     reason = params[:reason][:name]  unless params[:reason].nil?
 
     if voter
@@ -24,7 +22,9 @@ class CommandPonctuate
           point.person = voter
           
           person.points << point
-          person.score += 1		  
+
+          person.score ||= 0 # TODO callback on adicionar entidade para setar valores padrao
+          person.score += 1                                                   
           
           if person.save
             r.body = "Woohoo\! #{person.name.capitalize} agora com #{person.score} pontos, por #{point.reason}"
@@ -45,4 +45,4 @@ class CommandPonctuate
   end
 end
 
-CommandPonctuate.new
+Commands::Ponctuate.new

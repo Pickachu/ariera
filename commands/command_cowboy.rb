@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-class CommandCowboy
-  include Command
+class Commands::Cowboy
+  include Command::Commandable
 
-  def initialize
-    @guards = ['cowboy']
-    listen
-  end
+  guard 'cowboy'
 
-  def execute m, params
+  handle do |m, params|
     # @todo Encapsular na classe command daqui
     puts 'executing cowboy'
 
@@ -29,4 +26,4 @@ class CommandCowboy
 end
 
 # TODO Instantiate classes out of here
-CommandCowboy.new
+Commands::Cowboy.new

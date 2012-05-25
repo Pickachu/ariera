@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
-class CommandRule
-  include Command
+class Commands::Rule
+  include Command::Commandable
+  
+  guards ['rule \d+', 'rules \d+', 'regras \d+', 'regra \d+']
+  parameter :number
 
-  def initialize
-    @guards = ['rule \d+', 'rules \d+', 'regras \d+', 'regra \d+']
-    @parameters = [:number]
+  help :syntax => 'regra <numero...>', :variants => [:rules, :rule, :regra, :regras], :description => 'Exibe regra da internet.'
 
-    listen
-  end
-
-  def help
-    {:syntax => 'regra <numero...>', :variants => [:rules, :rule, :regra, :regras], :description => 'Exibe regra da internet.'}
-  end
-
-  def execute m, params
+  handle do |m, params|
     r = m.reply
     r.body = ''
     
@@ -22,7 +16,7 @@ class CommandRule
     if params[:number]
       numbers = params[:number][:modifier].split(' ')
       numbers.each do |number|
-        rule = Rule.find_by_number(number)
+        rule = Rule.numbered(number).first
         
         if rule
           r.body += "Regra #{rule.number}: #{rule.name} \n"
@@ -40,4 +34,4 @@ class CommandRule
 end
 
 # TODO Instantiate classes out of here
-CommandRule.new
+Commands::Rule.new

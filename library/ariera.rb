@@ -2,49 +2,46 @@ require 'blather/client/dsl'
 
 module Ariera
   extend Blather::DSL
-                                                               
+                         
+  class << self
+    # TODO create attr_accessor only if we're in room mode
+    attr_accessor :configuration, :logger, :room
+  end
+
+  @logger = Logger.new $stderr
 
   def self.run
     authentication = configuration[:xmpp]
-    
-    puts authentication.inspect
-    puts authentication.inspect
-    puts authentication.inspect
-    puts authentication.inspect
-    puts authentication.inspect
 
+    logger.level = Logger::DEBUG
+                   
     case authentication['service']
     when 'facebook'
       Blather::Stream::SASL::FacebookPlatform.const_set 'FB_API_KEY', authentication['api_key'] if authentication.include? 'api_key'
     end
 
-    setup authentication["login"], authentication['password'], authentication["host"]
+    setup authentication["login"] + '/Ariera', authentication['password'], authentication["host"]
 
     client.run
   end
 
-  when_ready do
-    puts 'Connected'
+  def self.instance
+    client 
+  end
     
+  when_ready do
+    Ariera.logger.info('when_ready') {"connected as #{jid}"}
+                                              
     # include commands
     Dir["commands/*.rb"].each {|file| require_relative "../#{file}"}
-
+    Dir["commands/room/*.rb"].each {|file| require_relative "../#{file}"}
 
     # create a room
-    Room.new 'Domo'
+    if configuration[:mode] == :room
+      self.room = Room.new 'chat@izap.com.br'
+    end
+
+    # listen for unhandled commands
+    Unhandled.new
   end
-
-
-  message :groupchat? do |m|
-    puts 'group chat incoming'
-    puts m
-  end
-
-  def self.configuration=(value)
-    @configuration = value
-  end                 
-
-  def self.configuration
-    @configuration
-  end                   
 end   
