@@ -1,9 +1,10 @@
+# encoding: utf-8
 module Ariera
   class Room
     # Move to module Ariera::Client::DSL
-    delegate :message, :write_to_stream, :my_roster, :logger, :to => Ariera 
+    delegate :message, :write_to_stream, :my_roster, :logger, :to => Ariera
     alias_method :roster, :my_roster
-          
+
     delegate :identity, :to => :room
     attr_accessor :room, :people
 
@@ -15,23 +16,24 @@ module Ariera
       listen
       autoaprove
     end
-     
-    def receive message
-      if in_room? message.sender
-        person = people[message.sender]
 
-        puts message.inspect
-                     
-        unless message.kind_of? Command
-          message.body = "[#{message.pseudonym}] #{message.body}" # Prefix with sender name
-        end                                                                     
+    def receive stanza
+      if in_room? stanza.sender
+        person = people[stanza.sender]
 
-        message.broadcast
+        # Prefix with sender name unless is a command
+        unless stanza.kind_of? Command
+          stanza.body = "[#{stanza.pseudonym}] #{stanza.body}"
+          stanza.formatted_body = "<span style=\"color: #666666;\"><b>#{stanza.pseudonym}</b></span>: #{stanza.formatted_body}" # Prefix with sender name
+        end
+
+        stanza.broadcast
       else
-        reply = message.reply
-        reply.body = "Voce nao esta na sala safadinho!"
+        reply = stanza.reply
+        reply.body = "Voce não está na sala safadinho!"
+        reply.formatted_body = "Voce não está na sala safadinho!"
         reply.deliver
-      end 
+      end
     end
 
     def in_room? identity
@@ -42,7 +44,7 @@ module Ariera
     def listen
       Ariera.message :chat?, :body do |message|
         receive Ariera::Room::Message.new(self, message)
-      end                                 
+      end
     end
 
     def add person
@@ -50,26 +52,53 @@ module Ariera
       @room.people << person
       @room.save
     end
-        
+
     def autoaprove
       Ariera.subscription :request? do |s|
         listed = Person.where(:identity => s.from).first
         if (listed)
           logger.debug "approved subscription request from #{s.from}"
-          add listed                     
+
+          # Add person to room
+          add listed
           write_to_stream s.approve!
+
+          # Welcome message
+          reply = Blather::Message.new s.from
+          reply.body = "Obrigado por vender a sua alma."
+          reply.xhtml = "Obrigado por vender a sua <b>alma</b>."
+          write_to_stream reply
         else
           logger.debug "ignored chat request from #{s.from}"
-        end             
+          reply = Blather::Message.new s.from
+          reply.body = "Você não está na lista de pessoas vip."
+          reply.xhtml = "Você não está na lista de pessoas vip."
+          write_to_stream reply
+        end
+      end
+
+      Ariera.subscription :subscribed? do |s|
+        unless in_room? s.from
+          listed = Person.where(:identity => s.from).first
+
+          add listed
+
+          reply = Blather::Message.new s.from
+          reply.body = "Obrigado por vender a sua alma."
+          reply.xhtml = "Obrigado por vender a sua <b>alma</b>."
+          write_to_stream reply
+        else
+          logger.debug "already subscribed from #{s.from}"
+        end
       end
     end
 
     def initialize_people
       @people = {}
 
-      @room.people.map do |person| 
+      @room.people.map do |person|
         @people[person.identity] = person.name
-        
+
         # Update nickname of people
         item = roster[person.identity]
         if (item.name != person.nickname)
@@ -77,8 +106,6 @@ module Ariera
           roster.push item
         end
       end
-
-      logger.debug "people in room are #{@people.values.join(', ')}"
     end
   end
 end

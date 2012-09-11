@@ -4,23 +4,30 @@ class Commands::Cowboy
 
   guard 'cowboy'
 
+  parameter :person
+
   handle do |m, params|
     # @todo Encapsular na classe command daqui
-    puts 'executing cowboy'
 
     r = m.reply
-    person = Person.named(params[:name].downcase).first
-    
+    if (params[:person])
+      identifier = params[:person][:name]
+      person = Person.named(identifier).first
+    else
+      identifier = Blather::JID.new(m.from).stripped
+      person = Person.identified_by(identifier).first
+    end
+
     unless person.nil?
       unless person.cowboy.nil?
-        r.body = "Se estivéssemos no sunset riders, seu nome seria: " + person.cowboy.name + "."
+        r.body = "Se estivéssemos no sunset riders, o nome de #{person.name} seria: " + person.cowboy.name + "."
       else
-        r.body = "Uma pena mas você não tem nome de cowboy ainda #{person.name}"
+        r.body = "Uma pena mas você não tem nome de cowboy ainda #{identifier}."
       end
     else
-      r.body = "Pessoa não encontrada para busca de nome cowboy: #{params[:name]}"
+      r.body = "Pessoa não encontrada para busca de nome cowboy: #{identifier}."
     end
-    
+
     r
   end
 end

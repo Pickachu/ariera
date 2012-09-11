@@ -1,5 +1,7 @@
 class Rule
   include Mongoid::Document
+  include Mongoid::Timestamps
+
   field :number, type: Fixnum
   field :description, type: String
 

@@ -2,7 +2,7 @@ require 'blather/client/dsl'
 
 module Ariera
   extend Blather::DSL
-                         
+
   class << self
     # TODO create attr_accessor only if we're in room mode
     attr_accessor :configuration, :logger, :room
@@ -14,7 +14,7 @@ module Ariera
     authentication = configuration[:xmpp]
 
     logger.level = Logger::DEBUG
-                   
+
     case authentication['service']
     when 'facebook'
       Blather::Stream::SASL::FacebookPlatform.const_set 'FB_API_KEY', authentication['api_key'] if authentication.include? 'api_key'
@@ -26,12 +26,16 @@ module Ariera
   end
 
   def self.instance
-    client 
+    client
   end
-    
+
+  def self.clear_handlers *args
+    client.clear_handlers *args
+  end
+
   when_ready do
     Ariera.logger.info('when_ready') {"connected as #{jid}"}
-                                              
+
     # include commands
     Dir["commands/*.rb"].each {|file| require_relative "../#{file}"}
     Dir["commands/room/*.rb"].each {|file| require_relative "../#{file}"}
@@ -44,4 +48,4 @@ module Ariera
     # listen for unhandled commands
     Unhandled.new
   end
-end   
+end

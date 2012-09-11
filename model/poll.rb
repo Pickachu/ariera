@@ -1,5 +1,7 @@
 class Poll
   include Mongoid::Document
+  include Mongoid::Timestamps
+
   has_many :votes, :as => :votable
   belongs_to :person
 

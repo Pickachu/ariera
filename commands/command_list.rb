@@ -23,6 +23,7 @@ class Commands::List
 
     unless params[:entity].nil?
       entity = params[:entity][:name].singularize
+
       if listable? entity
         list = entity.camelize.constantize.limit(10).offset(10 * pagina).all
         

@@ -2,10 +2,12 @@
 STDOUT.sync = true
 
 # TODO move this things to the initializers folder
-# Frameworks and libraries     
+# Frameworks and libraries
 require 'rubygems'
+require 'sanitize'
 require 'blather'
 require 'mongoid'
+require 'active_support/core_ext/date_time/calculations'
 
 # Load configurations
 xmpp = YAML::load(File.open(File.expand_path('config/xmpp.yml')))
@@ -14,7 +16,7 @@ ENVIRONMENT = ENV['ENVIRONMENT']
 SERVICE = ENV['SERVICE']
 
 xmpp[ENVIRONMENT][SERVICE]['service'] = SERVICE
-                                               
+
 # Mongoid Configuration
 Mongoid.load!('config/mongoid.yml')
 
@@ -32,14 +34,14 @@ require_relative 'model/room'
 # Library Items
 $LOAD_PATH << File.expand_path('library')
 
-require 'blather/sasl.rb' 
-require 'ariera' 
+require 'blather/sasl.rb'
+require 'ariera'
 require 'command'
 require 'action'
 
 autoload :Subscription, File.expand_path('model/subscription')
 autoload :Person, File.expand_path('model/person')
-autoload :Room, 'model/room'  
+autoload :Room, 'model/room'
 autoload :X, 'stanz/xa'
 
 Ariera.autoload :Room, File.expand_path('library/room')
@@ -47,7 +49,7 @@ Ariera.autoload :Room, File.expand_path('library/room')
 Ariera.autoload :Unhandled, File.expand_path('model/unhandled')
 Ariera::Room.autoload :Message, File.expand_path('library/room/message')
 Ariera::Room.autoload :Command, File.expand_path('library/room/command')
-                                                               
+
 Ariera.configuration = {
   :xmpp => xmpp[ENVIRONMENT][SERVICE],
   :mode => :room
@@ -58,6 +60,5 @@ Ariera.configuration = {
 case ENVIRONMENT
 when 'development'
   Ariera.logger = Logger.new $stdout
-  Blather.logger = Logger.new $stdout  
+  Blather.logger = Logger.new $stdout
 end
-                          

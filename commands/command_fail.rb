@@ -7,13 +7,16 @@ class Commands::Fail
   parameter :reason
 
   handle do |m, params|
-    
+
     r = m.reply
     voter = Person.where(:identity => Blather::JID.new(m.from).stripped).first
     person = Person.named(params[:person][:name].downcase).first unless params[:person].nil?
-    reason = params[:reason][:name]  unless params[:reason].nil?
 
-    
+    if params[:reason]
+      params[:reason][:name] += params[:reason][:modifier] unless params[:reason][:modifier].blank?
+      reason = params[:reason][:name]
+    end
+
     if person && voter
       if reason
         point = Point.new
@@ -23,12 +26,12 @@ class Commands::Fail
 
         person.points << point
         person.score ||= 0
-        person.score -= 1		  
-        
+        person.score -= 1
+
         if person.save
           r.body = "Safadinho! #{person.name.capitalize} agora com #{person.score} pontos, por #{point.reason}"
         else
-          r.body = 'Erro ao pontuar pessoa'
+          r.body = 'Erro ao falhar pessoa.'
         end
       else
         r.body = 'Motivo da pontuação não informado.'
@@ -40,7 +43,7 @@ class Commands::Fail
         r.body = 'Votador inválido: ' + params[:name]
       end
     end
-    
+
     r
   end
 end

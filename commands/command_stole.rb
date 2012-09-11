@@ -3,15 +3,19 @@ class Commands::Steal
   include Command::Commandable
 
   guard 'roubar .+'
+  guard 'steal .+'
+
   parameter :thief
   parameter :victim
   parameter :reason
   
+  help :syntax => 'roubar <ladrão> <vítma>', :variants => [:steal], :description => "Rouba 1 ponto de <vítma> e passa para <ladrão>"
+                                                                       
   handle do |m, params|
     r = m.reply
-    voter = Person.find_by_name(params[:name].downcase)
-    thief = Person.find_by_name(params[:thief][:name].downcase) unless params[:thief].nil?
-    victim = Person.find_by_name(params[:victim][:name].downcase) unless params[:victim].nil?
+    voter = Person.identified_by(Blather::JID.new(m.from).stripped).first
+    thief = Person.named(params[:thief][:name].downcase).first unless params[:thief].nil?
+    victim = Person.named(params[:victim][:name].downcase).first unless params[:victim].nil?
 
     if (voter.name == victim.name)
       r.body = 'Roubando pontos de si mesmo ein?? Dexa de ser idiota!'

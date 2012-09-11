@@ -1,7 +1,9 @@
 class Point
   include Mongoid::Document
-  # validates_presence_of :reason
-  
+  include Mongoid::Timestamps
+
+  validates_presence_of :reason
+
   field :amount, type: Fixnum
   field :reason, type: String
 
