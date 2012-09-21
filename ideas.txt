@@ -10,6 +10,7 @@ filme - procurar por dados de filme no imdb
 rand - gerar numero aleatorio
 calc - pesquisar resultado da expressao no wolfram
 karaoke - não tenho a menor ideia
+link - abrir link no meu browser
 
 Easter Eggs
 dunnet - iniciar jogo dunnet

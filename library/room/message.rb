@@ -12,7 +12,8 @@ module Ariera
         @room = room
 
         # The broadcast message must be from the bot
-        @stanza = Blather::Stanza::Message.new room.identity
+        @stanza = Blather::Stanza::Message.new
+        @stanza.from = room.identity
 
         @original_sender = Blather::JID.new(raw.from)           # Original sender to the bot
         @sender = roster[@original_sender.stripped.to_s].name
@@ -43,8 +44,12 @@ module Ariera
         room.roster.each do |item|
           receiver_jid = Blather::JID.new item.jid
 
+          # Do not broadcast to people outside room, TODO filter people by room
+          next unless room.in_room? receiver_jid
+
           # Do not broadcast to self
           next if (sender_jid  == receiver_jid.stripped)
+          next unless item.jid.to_s.include? '@'              # TODO Discover why some jids are coming as pseudonyns
 
           stanza.to = item.jid
           deliver

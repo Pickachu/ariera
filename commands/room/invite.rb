@@ -3,7 +3,7 @@ module Ariera
   class Room
     class Invite
       include ::Command::Commandable
-      
+
       guards ['invite .+', 'invites .+', 'convidar .+', 'convite .+']
       parameter :identity
 
@@ -18,17 +18,9 @@ module Ariera
         inviter = Blather::JID.new reply.from
 
         invite guest, inviter.stripped
-        
-
-        # TODO remove this command
-        person = ::Person.where(:identity => guest.to_s).first
-        if (person)
-          person.room = ::Room.first
-          person.save
-        end
 
         reply.body = "Usuário #{guest} foi convidado."
-                                         
+
         reply
       end
 

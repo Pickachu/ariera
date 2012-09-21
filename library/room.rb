@@ -2,7 +2,7 @@
 module Ariera
   class Room
     # Move to module Ariera::Client::DSL
-    delegate :message, :write_to_stream, :my_roster, :logger, :to => Ariera
+    delegate :message, :write_to_stream, :my_roster, :logger, :shell, :to => Ariera
     alias_method :roster, :my_roster
 
     delegate :identity, :to => :room
@@ -41,6 +41,8 @@ module Ariera
     end
 
     # Listening methods
+    # TODO move this to a command
+    # TODO create module listenable
     def listen
       Ariera.message :chat?, :body do |message|
         receive Ariera::Room::Message.new(self, message)
@@ -96,14 +98,23 @@ module Ariera
     def initialize_people
       @people = {}
 
-      @room.people.map do |person|
+      @room.people.each do |person|
         @people[person.identity] = person.name
 
-        # Update nickname of people
-        item = roster[person.identity]
-        if (item.name != person.nickname)
-          item.name = person.nickname
-          roster.push item
+        if person.identity?
+
+          # Update nickname of people
+          item = roster[person.identity]
+
+          logger.warn "Roster not found for identity #{person.identity}, does the chat room have this contacts added?" unless item
+
+          if item and item.name != person.nickname
+            item.name = person.nickname
+            roster.push item
+          end
+
+        else
+          logger.warn "Identity not found for person #{person.inspect}"
         end
       end
     end

@@ -66,8 +66,12 @@ module Command
             # TODO see if is to send message back to the user
             write_to_stream reply
 
-            # Broadcast command result to other people
+            # Broadcast command result and user message to other people
             if Ariera.configuration[:mode] === :room
+
+              # Broadcast user message
+              Ariera.room.receive Ariera::Room::Message.new(Ariera.room, message)
+
               # Switch body to broadcast Command
               message.body = reply.body
               Ariera.room.receive(Ariera::Room::Command.new(Ariera.room, message, output))

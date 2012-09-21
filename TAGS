@@ -1,193 +1,0 @@
-
-/Users/heitor/Development/Workspace/Ruby/ariera/ariera.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_add.rb,128
-class CommandAddCommandAdd2,24
-  def initializeinitialize5,60
-  def helphelp12,172
-  def execute m, paramsexecute16,307
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_cowboy.rb,111
-class CommandCowboyCommandCowboy2,24
-  def initializeinitialize5,63
-  def execute m, paramsexecute10,123
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_domo.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_fail.rb,107
-class CommandFailCommandFail2,24
-  def initializeinitialize5,61
-  def execute m, paramsexecute12,160
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_filme.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_help.rb,107
-class CommandHelp CommandHelp2,24
-  def initializeinitialize5,64
-  def execute m, paramsexecute9,168
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_isabella.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_karaoke.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_list.rb,335
-class CommandListCommandList2,24
-  def initializeinitialize5,61
-  def listableslistables11,172
-  def listable? entitylistable?16,291
-  def execute m, paramsexecute20,351
-  def camelize(lower_case_and_underscored_word, first_letter_in_uppercase = true)camelize56,1531
-  def constantize(camel_cased_word)constantize64,1892
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_lunch.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_minusminus.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_network.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_next.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_pause.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_play.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_plusplus.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_poll.rb,141
-class CommandPollCommandPoll2,24
-  def initializeinitialize5,61
-  def execute m, paramsexecute10,151
-  def results pollresults41,791
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_pontuar.rb,117
-class CommandPonctuateCommandPonctuate2,24
-  def initializeinitialize5,66
-  def execute m, paramsexecute12,168
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_popup.rb,37
-class CommandPopupCommandPopup2,24
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_previous.rb,115
-class CommandPreviousCommandPrevious2,24
-  def initializeinitialize5,65
-  def execute m, paramsexecute11,175
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_quote.rb,109
-class CommandQuoteCommandQuote2,24
-  def initializeinitialize5,62
-  def execute m, paramsexecute11,181
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_round.rb,109
-class CommandRoundCommandRound2,24
-  def initializeinitialize5,62
-  def execute m, paramsexecute11,189
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_rule.rb,130
-class CommandRuleCommandRule2,24
-  def initializeinitialize5,61
-  def helphelp12,192
-  def execute m, paramsexecute16,338
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_stole.rb,109
-class CommandStealCommandSteal2,24
-  def initializeinitialize5,62
-  def execute m, paramsexecute12,171
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_undo.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/command_volume.rb,240
-class CommandVolumeCommandVolume2,24
-  def initializeinitialize5,63
-  def permited? pessoapermited?12,199
-  def execute m, paramsexecute16,252
-  def bar()bar57,1191
-  def volume=(value)volume=63,1342
-  def volumevolume70,1463
-
-/Users/heitor/Development/Workspace/Ruby/ariera/commands/commmand_say.rb,105
-class CommandSayCommandSay2,24
-  def initializeinitialize5,60
-  def execute m, paramsexecute12,184
-
-/Users/heitor/Development/Workspace/Ruby/ariera/initialize.rb,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/library/action.rb,63
-module ActionAction1,0
-  def dodo2,14
-  def undoundo5,30
-
-/Users/heitor/Development/Workspace/Ruby/ariera/library/ariera.rb,151
-module ArieraAriera3,30
-  def self.runrun7,131
-  def self.configuration=(value)configuration37,761
-  def self.configurationconfiguration41,845
-
-/Users/heitor/Development/Workspace/Ruby/ariera/library/blather/sasl.rb,1199
-module BlatherBlather3,15
-class StreamStream4,30
-  class SASL < FeaturesSASL7,57
-    class UnknownMechanism < BlatherErrorUnknownMechanism8,81
-    def initialize(stream, succeed, fail)initialize24,412
-    def receive_data(stanza)receive_data31,554
-    def next!next!52,1114
-    def process_anonymousprocess_anonymous61,1286
-    def authenticate_with(method)authenticate_with69,1537
-    def b64(str)b6487,1998
-    def auth_node(mechanism, content = nil)auth_node93,2101
-    module DigestMD5 # :nodoc:DigestMD5103,2343
-      def authenticateauthenticate106,2456
-      def challengechallenge112,2583
-      def decode_challenge(separator = ',')decode_challenge121,2773
-      def generate_responsegenerate_response138,3260
-      def respondrespond146,3627
-      def d(s); Digest::MD5.digest(s);    endd177,4841
-      def h(s); Digest::MD5.hexdigest(s); endh178,4887
-    module PlainPlain182,4968
-      def authenticateauthenticate183,4985
-    module AnonymousAnonymous189,5142
-      def authenticateauthenticate190,5163
-    module FacebookPlatformFacebookPlatform195,5264
-      def authenticateauthenticate198,5317
-      def challengechallenge203,5483
-
-/Users/heitor/Development/Workspace/Ruby/ariera/library/command.rb,157
-module CommandCommand1,0
-  def listenlisten6,113
-  def message *args, &blockmessage81,2375
-  def write_to_stream *args, &blockwrite_to_stream85,2445
-
-/Users/heitor/Development/Workspace/Ruby/ariera/library/room.rb,58
-class RoomRoom1,0
-  def initialize nameinitialize2,11
-
-/Users/heitor/Development/Workspace/Ruby/ariera/library/stanza/x.rb,106
-class X < Blather::Stanza::PresenceX1,0
-  def self.new(node = nil, ver = nil)new2,36
-  def xx10,183
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/cowboy.rb,24
-class CowboyCowboy1,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/food_establishment.rb,46
-class FoodEstablishmentFoodEstablishment1,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/person.rb,24
-class PersonPerson1,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/point.rb,22
-class PointPoint1,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/poll.rb,20
-class PollPoll1,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/rule.rb,20
-class RuleRule1,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/synonym.rb,26
-class SynonymSynonym1,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/term.rb,20
-class TermTerm1,0
-
-/Users/heitor/Development/Workspace/Ruby/ariera/model/vote.rb,20
-class VoteVote1,0

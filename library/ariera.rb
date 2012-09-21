@@ -13,7 +13,7 @@ module Ariera
   def self.run
     authentication = configuration[:xmpp]
 
-    logger.level = Logger::DEBUG
+    # logger.level = Logger::DEBUG
 
     case authentication['service']
     when 'facebook'

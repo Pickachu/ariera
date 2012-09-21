@@ -13,9 +13,7 @@ require 'active_support/core_ext/date_time/calculations'
 xmpp = YAML::load(File.open(File.expand_path('config/xmpp.yml')))
 
 ENVIRONMENT = ENV['ENVIRONMENT']
-SERVICE = ENV['SERVICE']
-
-xmpp[ENVIRONMENT][SERVICE]['service'] = SERVICE
+ACCOUNT = ENV['ACCOUNT']
 
 # Mongoid Configuration
 Mongoid.load!('config/mongoid.yml')
@@ -50,8 +48,12 @@ Ariera.autoload :Unhandled, File.expand_path('model/unhandled')
 Ariera::Room.autoload :Message, File.expand_path('library/room/message')
 Ariera::Room.autoload :Command, File.expand_path('library/room/command')
 
+
+raise "Account #{ACCOUNT} not found for enviroment #{ENVIRONMENT}." unless xmpp[ENVIRONMENT].has_key? ACCOUNT
+
+
 Ariera.configuration = {
-  :xmpp => xmpp[ENVIRONMENT][SERVICE],
+  :xmpp => xmpp[ENVIRONMENT][ACCOUNT],
   :mode => :room
 }
 
