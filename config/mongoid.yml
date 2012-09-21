@@ -1,0 +1,6 @@
+development:
+  uri: mongodb://ariera:74193456@ds033217.mongolab.com:33217/heroku_app4489260
+production:
+  uri: <%= ENV['MONGOLAB_URI'] %>
+staging:
+  uri: mongodb://ariera:74193456@ds033217.mongolab.com:33217/heroku_app4489260
