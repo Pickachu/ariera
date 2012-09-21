@@ -39,6 +39,7 @@ module Ariera
               person.pseudonym = pseudonym
               if person.save
                 rosterize pseudonym, identity
+                Ariera.room.add person
                 "Você agora é conhecido como #{pseudonym}"
               else
                 "Erro ao mudar seu apelido"
@@ -51,6 +52,7 @@ module Ariera
             person.pseudonym = pseudonym
             if person.save
               rosterize pseudonym, identity
+              Ariera.room.add person
               "Você agora é conhecido como #{pseudonym}"
             else
               "Problema ao alterar seu nick"
@@ -60,13 +62,14 @@ module Ariera
           end
         # Pessoa nao encontrada criar uma nova
         else
-          person = ::Person.new :identity => identity, :pseudonym => pseudonym, :room => ::Room.first
+          person = ::Person.new :identity => identity, :pseudonym => pseudonym, :name => pseudonym
 
           if person.save
             rosterize pseudonym, identity
+            Ariera.room.add person
             "Você agora é conhecido como #{pseudonym}"
           else
-            "Problema ao definir o seu nick criando uma pessoa"
+            "Problema ao definir o seu nick criando uma pessoa: #{person.errors.full_messages.join("\n")}"
           end
         end
       end

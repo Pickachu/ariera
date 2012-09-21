@@ -42,7 +42,7 @@ module Ariera
 
     # create a room
     if configuration[:mode] == :room
-      self.room = Room.new 'chat@izap.com.br'
+      self.room = Room.new jid
     end
 
     # listen for unhandled commands

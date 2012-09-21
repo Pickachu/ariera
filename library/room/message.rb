@@ -2,7 +2,7 @@ module Ariera
   class Room
     class Message
       attr_writer :sender
-      attr_accessor :stanza, :original_sender, :room
+      attr_accessor :stanza, :original_sender, :room, :pseudonym
       delegate :to, :to=, :from, :from=, :body, :body=, :to => :stanza
 
       delegate :my_roster, :write_to_stream, :logger, :to => Ariera
@@ -16,7 +16,11 @@ module Ariera
         @stanza.from = room.identity
 
         @original_sender = Blather::JID.new(raw.from)           # Original sender to the bot
-        @sender = roster[@original_sender.stripped.to_s].name
+
+        # Try sender from roster
+        # TODO move sender to Room::Participant
+        @sender = sender_for(@original_sender)
+        @pseudonym = person_for(@sender).name
 
         stanza.body = Sanitize.clean(raw.body)                  # Original body
 
@@ -51,21 +55,13 @@ module Ariera
           next if (sender_jid  == receiver_jid.stripped)
           next unless item.jid.to_s.include? '@'              # TODO Discover why some jids are coming as pseudonyns
 
-          stanza.to = item.jid
+          stanza.to = "heitor.salazar@izap.com.br"
           deliver
         end
       end
 
-      def pseudonym
-        @sender
-      end
-
       def sender stripped = true
-        if stripped
-          original_sender.stripped
-        else
-          @sender
-        end
+        @sender.stripped
       end
 
       def reply
@@ -75,6 +71,31 @@ module Ariera
 
       def deliver
         write_to_stream stanza
+      end
+
+      private
+      # TODO Move this to participant
+      def person_for sender
+        room.people[sender.stripped.to_s] || Person.new(identity: sender)
+      end
+
+      def sender_for identity
+        stripped = identity.stripped.to_s
+        item = roster[stripped]
+
+        if item
+          sender = item.jid
+        else
+          # When sender already leaved the room we must retrieve it from people
+          # TODO Move this to Room::Subscription
+          puts stripped
+          puts room.people[stripped].inspect
+          puts room.people.inspect
+
+          sender = Blather::JID.new room.people[stripped].identity unless sender
+        end
+
+        sender
       end
     end
   end

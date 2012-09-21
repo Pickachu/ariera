@@ -49,6 +49,8 @@ Ariera::Room.autoload :Message, File.expand_path('library/room/message')
 Ariera::Room.autoload :Command, File.expand_path('library/room/command')
 
 
+raise "No environment set." if ENVIRONMENT.blank?
+raise "Configuration for enviroment #{ENVIRONMENT} not found." unless xmpp.has_key? ENVIRONMENT
 raise "Account #{ACCOUNT} not found for enviroment #{ENVIRONMENT}." unless xmpp[ENVIRONMENT].has_key? ACCOUNT
 
 
@@ -61,6 +63,7 @@ Ariera.configuration = {
 
 case ENVIRONMENT
 when 'development'
+when 'staging'
   Ariera.logger = Logger.new $stdout
   Blather.logger = Logger.new $stdout
 end
