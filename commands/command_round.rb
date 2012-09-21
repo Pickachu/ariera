@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-class Commands::Round
-  include Command::Commandable
+module Commands
+  class Round
+    include Command::Commandable
 
-  guards ['round', 'repeat', 'again', 'dinovo', 'restart']
-  parameter :amount
+    guards ['round', 'repeat', 'again', 'dinovo', 'restart']
+    parameter :amount
 
-  handle do |m, params|
-    # @todo Encapsular na classe command daqui
-    `osascript /Users/heitor/Development/Workspace/Ruby/ariera/scripts/execute_javascript_on_tab.scpt Grooveshark "Grooveshark.previous()"`
+    handle do |m, params|
+      # @todo Encapsular na classe command daqui
+      `osascript /Users/heitor/Development/Workspace/Ruby/ariera/scripts/execute_javascript_on_tab.scpt Grooveshark "Grooveshark.previous()"`
+    end
   end
 end
 
