@@ -55,7 +55,7 @@ module Ariera
           next if (sender_jid  == receiver_jid.stripped)
           next unless item.jid.to_s.include? '@'              # TODO Discover why some jids are coming as pseudonyns
 
-          stanza.to = "heitor.salazar@izap.com.br"
+          stanza.to = sender_jid
           deliver
         end
       end
