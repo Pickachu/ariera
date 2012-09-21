@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-class Commands::Fail
-  include Command::Commandable
+module Commands
+  class Fail
+    include Command::Commandable
 
-  guard 'fail .+'
-  parameter :person
-  parameter :reason
+    guard 'fail .+'
+    parameter :person
+    parameter :reason
 
-  handle do |m, params|
+    handle do |m, params|
 
-    r = m.reply
-    voter = Person.where(:identity => Blather::JID.new(m.from).stripped).first
-    person = Person.named(params[:person][:name].downcase).first unless params[:person].nil?
+      r = m.reply
+      voter = Person.where(:identity => Blather::JID.new(m.from).stripped).first
+      person = Person.named(params[:person][:name].downcase).first unless params[:person].nil?
 
     if params[:reason]
       params[:reason][:name] += params[:reason][:modifier] unless params[:reason][:modifier].blank?

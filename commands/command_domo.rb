@@ -1,14 +1,16 @@
-class Commands::Domo
-  include Command::Commandable
+module Commands
+  class Domo
+    include Command::Commandable
 
-  guard 'domo'
+    guard 'domo'
 
-  handle do |message, params|
-    reply = message.reply
-    reply.body = 'kun'
-    reply
+    handle do |message, params|
+      reply = message.reply
+      reply.body = 'kun'
+      reply
+    end
   end
 end
 
 # TODO Automatic instatiation of commands
-Commands::Domo.new             
+Commands::Domo.new
