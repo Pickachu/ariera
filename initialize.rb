@@ -14,6 +14,7 @@ xmpp = YAML::load(File.open(File.expand_path('config/xmpp.yml')))
 
 ENVIRONMENT = ENV['ENVIRONMENT']
 ACCOUNT = ENV['ACCOUNT']
+DEBUG = ENV['DEBUG']
 
 # Mongoid Configuration
 Mongoid.load!('config/mongoid.yml')
@@ -60,6 +61,10 @@ Ariera.configuration = {
 }
 
 # Activate debuging
+if DEBUG
+  Ariera.logger = Logger.new $stdout
+  Blather.logger = Logger.new $stdout
+end
 
 case ENVIRONMENT
 when 'development'
