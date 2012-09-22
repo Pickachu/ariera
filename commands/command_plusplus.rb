@@ -4,6 +4,8 @@ module Commands
 
     guard '.*[+]{2}'
 
+    help :syntax => '<termo>++', :description => 'Adiciona um ponto para <termo>.', :group => :ponctuation
+
     # TODO Quotation suport
     handle do |m|
       pluses = m.body.scan /([^\b\s]+)(?=[+]+)/

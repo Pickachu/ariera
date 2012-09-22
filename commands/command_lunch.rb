@@ -5,7 +5,7 @@ module Commands
 
     guards ['almo[çc]o.*', 'suggest .+', 'bora n[ao] .+', 'quero ir no .+']
     parameter :food_establishment
-
+    help :syntax => 'almoço <estabelecimento>', :variants => [:suggest, 'bora no', 'bora na', 'quero ir no'], :description => 'Sugere localidade <estabelecimento para almoçar.'
 
     handle do |m, params|
       r = m.reply

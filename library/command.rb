@@ -236,6 +236,7 @@ module Command
 
       def help hash = nil
         @help = hash if hash
+        @help[:name] = self.name.split('::').last.downcase unless @help.has_key? :name
         @help
       end
 

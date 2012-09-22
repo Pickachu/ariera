@@ -22,3 +22,5 @@ Features
 suportar utf8-como alias
 suporte a levels, personagens e ataques de monstros
 alguns comandos podem tocar barulhos do sistema
+{:name=>"domo", :modifier=>""}
+izap paga o almoço no dia

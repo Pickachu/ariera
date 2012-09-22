@@ -1,7 +1,7 @@
 module Commands
   class Participant
     include Command::Commandable
-   
+
     guards ['participants', 'participantes', 'na sala']
 
     handle do |message|
@@ -13,12 +13,13 @@ module Commands
       # TODO use room reference
       sender.room.people.each do |person|
         body += format(format, person.name, person.pseudonym, person.identity.gsub(/@.+/, ''))
-      end       
+      end
 
       reply.body = body
+      reply.xhtml = body.gsub("\n", '<br />');
       reply
-    end 
-  end    
+    end
+  end
 end
 
 Commands::Participant.new

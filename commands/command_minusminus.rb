@@ -4,11 +4,12 @@ module Commands
 
     guard '.*[-]{2}'
 
+    help :syntax => '<termo>--', :description => 'Remove um ponto para <termo>.', :group => :ponctuation
+
     # TODO
     # adium do
     #   guard '.*[—]'
     # end
-
 
     # TODO Quotation suport
     handle do |m|

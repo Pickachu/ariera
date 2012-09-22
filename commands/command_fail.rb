@@ -7,6 +7,8 @@ module Commands
     parameter :person
     parameter :reason
 
+    help :syntax => 'fail <pessoa> <motivo...>', :description => 'Remove 1 ponto da <pessoa> por ter feito <motivo>.', :group => :ponctuation
+
     handle do |m, params|
 
       r = m.reply

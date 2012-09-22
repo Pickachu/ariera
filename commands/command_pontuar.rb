@@ -7,6 +7,8 @@ module Commands
     parameter :person
     parameter :reason
 
+    help :syntax => 'pontuar <pessoa> <motivo...>', :description => 'Adiciona 1 ponto para <pessoa> por ter feito <motivo>.'
+
     handle do |m, params|
       r = m.reply
 
