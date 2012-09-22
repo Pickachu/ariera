@@ -6,6 +6,7 @@ gem "bson_ext"
 gem "foreman"
 gem "activesupport"
 gem "sanitize"
+gem 'text'
 
 group :assets do
   gem "rspec"

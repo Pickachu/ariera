@@ -7,6 +7,8 @@ module Commands
 
     parameter :person
 
+    help :syntax => 'cowboy [nome]', :description => 'Exibe seu nome de cowboy, ou da pessoa de nome [nome]. \n (O nome de cowboy é ganhando através de grandes feitos) '
+
     handle do |m, params|
       # @todo Encapsular na classe command daqui
 

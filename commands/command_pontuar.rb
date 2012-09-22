@@ -44,7 +44,7 @@ module Commands
             r.body = 'Motivo da pontuação não informado.'
           end
         else
-          r.body = 'Pessoa não encontrada: ' + params[:person][:name]
+          r.body = "Pessoa não encontrada: #{params[:person][:name]}. \n Que tal criar? Commando: adicionar pessoa #{params[:person][:name]}"
         end
       else
         r.body = 'Votador inválido: ' + params[:name]

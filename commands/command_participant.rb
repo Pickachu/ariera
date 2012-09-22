@@ -3,6 +3,7 @@ module Commands
     include Command::Commandable
 
     guards ['participants', 'participantes', 'na sala']
+    help :syntax => 'participantes', :variants => [:participants, :'na sala'], :description => 'Lista pessoas na sala de chat'
 
     handle do |message|
       reply = message.reply
