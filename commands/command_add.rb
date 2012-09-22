@@ -12,6 +12,8 @@ module Commands
     handle do |m, params|
       r = m.reply
 
+      supported_entities = ['estabelecimento', 'pessoa']
+
       case params[:type][:name]
       when 'estabelecimento'
         food_establishment = FoodEstablishment.new
@@ -32,8 +34,14 @@ module Commands
           r.body = person.errors.full_messages.join "\n"
         end
       else
-        r.body = "Entidade inexistente para adicionar: #{params[:entity][:name]}"
+        unless params[:entity].blank?
+          r.body = "Entidade inexistente para adicionar: #{params[:entity][:name]}\n"
+          r.body += "Entidades existentes: #{supported_entities.join(', ')}"
+        else
+          r.body = "Entidade não informada"
+        end
       end
+
 
       r
     end

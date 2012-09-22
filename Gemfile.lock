@@ -57,7 +57,7 @@ DEPENDENCIES
   blather
   bson_ext
   foreman
-  mongoid (~> 2.5)
+  mongoid (= 2.5)
   rspec
   sanitize
   text

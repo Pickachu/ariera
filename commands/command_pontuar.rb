@@ -12,8 +12,6 @@ module Commands
     handle do |m, params|
       r = m.reply
 
-      puts params.inspect
-
       voter = Person.where(:identity => Blather::JID.new(m.from).stripped).first
       person = Person.named(params[:person][:name].downcase).first unless params[:person].nil?
 
@@ -44,7 +42,7 @@ module Commands
             r.body = 'Motivo da pontuação não informado.'
           end
         else
-          r.body = "Pessoa não encontrada: #{params[:person][:name]}. \n Que tal criar? Commando: adicionar pessoa #{params[:person][:name]}"
+          r.body = "Pessoa não encontrada: #{params[:person][:name]}. \n Para sumonar essa pessoa digite: adicionar pessoa #{params[:person][:name]}\n Para ver todas pessoas: participantes"
         end
       else
         r.body = 'Votador inválido: ' + params[:name]

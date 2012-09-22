@@ -9,7 +9,7 @@ class Person
 
   validates :name, :uniqueness => true, :presence => true
 
-  scope :named, lambda { |name| where(:name => /^#{name}$/)}
+  scope :named, lambda { |name| where(:name => /^#{name}$/i)}
   scope :identified_by, lambda { |identity| where(:identity => identity)}
 
   field :name, type: String
