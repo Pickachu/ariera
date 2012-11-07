@@ -24,9 +24,9 @@ production:
     <<: *google-server
     login: chat-projetos@izap.com.br
     password: modificar
-  chat_suporte:
-    <<: *google-server
-    login: chat-suporte@izap.com.br
-    password: modificar
 staging:
   <<: *defaults
+  heitor_woollu:
+    <<: *google-server
+    login: heitorsalazar@woollu.com
+    password: )74193456((74193456)

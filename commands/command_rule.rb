@@ -17,7 +17,7 @@ module Commands
       if params[:number]
         numbers = params[:number][:modifier].split(' ')
         numbers.each do |number|
-          rule = Rule.numbered(number).first
+          rule = ::Rule.numbered(number).first
 
           if rule
             r.body += "Regra #{rule.number}: #{rule.name} \n"

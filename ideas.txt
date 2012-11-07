@@ -27,3 +27,5 @@ alguns comandos podem tocar barulhos do sistema
 izap paga o almoço no dia
 
 
+comando para ver nome científico das pessoas
+comando pokemon numero fala qual pokemon vc é

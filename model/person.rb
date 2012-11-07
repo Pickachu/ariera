@@ -3,6 +3,7 @@ class Person
   has_many :points, :as => :pointable
   has_many :votes, :as => :votable
   has_many :choices, :class_name => "Vote"
+  has_many :purchases
   has_one :cowboy
   has_many :polls
   belongs_to :room
@@ -20,5 +21,8 @@ class Person
   def nickname
     pseudonym || name || identity
   end
-
+  
+  def sodas
+    purchases.where(:product => {:kind => :refrigerante}).count
+  end
 end

@@ -45,7 +45,7 @@ module Commands
           r.body = "Pessoa não encontrada: #{params[:person][:name]}. \n Para sumonar essa pessoa digite: adicionar pessoa #{params[:person][:name]}\n Para ver todas pessoas: participantes"
         end
       else
-        r.body = 'Votador inválido: ' + params[:name]
+        r.body = "Votador inválido: #{params[:name]}"
       end
 
       r

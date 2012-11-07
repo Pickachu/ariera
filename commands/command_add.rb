@@ -3,18 +3,45 @@ module Commands
   class Add
     include Command::Commandable
 
-    guards ['adicionar .+', 'add .+']
+    guards ['adicionar .+', 'add .+', 'criar .+']
+
     parameter :type
     parameter :entity
+    parameter :other
 
-    help :syntax => 'adicionar <entidade> <nome>', :variants => [:add, :adicionar], :description => 'Adiciona entidade'
+    help :syntax => 'adicionar <entidade> <nome> <outros...>', :variants => [:add, :adicionar, :criar], :description => 'Adiciona entidade'
+
 
     handle do |m, params|
       r = m.reply
 
-      supported_entities = ['estabelecimento', 'pessoa']
-
+      supported_entities = ['estabelecimento', 'pessoa', 'produto', 'refrigerante']
+                                                      
       case params[:type][:name]
+      when 'refrigerante'
+        product = Product.new
+        product.name = params[:entity][:name].downcase
+        product.kind = :refrigerante
+        
+        if product.save
+          r.body = "Refrigerante #{product.name.capitalize} criado."
+        else                  
+          r.body = product.errors.full_messages.join "\n"
+        end        
+        
+      when 'product', 'produto'
+        next "Parametro tipo é obrigatório: <br /> adicionar produto #{params[:entity][:name]} refrigerante" if params[:other].nil?
+
+        product = Product.new
+        product.name = params[:entity][:name].downcase
+        product.kind = params[:other][:name].downcase
+                                                        
+        if product.save
+          r.body = "Produto #{product.name.capitalize} criado."
+        else                  
+          r.body = product.errors.full_messages.join "\n"
+        end        
+        
       when 'estabelecimento'
         food_establishment = FoodEstablishment.new
         food_establishment.name = params[:entity][:name]

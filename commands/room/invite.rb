@@ -4,7 +4,7 @@ module Ariera
     class Invite
       include ::Command::Commandable
 
-      guards ['invite .+', 'invites .+', 'convidar .+', 'convide .+']
+      guards ['invite .+', 'invites .+', 'convidar .+', 'convide .+', 'chamar .+']
       parameter :identity
 
       handle do |message, params|
