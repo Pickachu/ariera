@@ -24,6 +24,7 @@ module Ariera
 
         stanza.body = Sanitize.clean(raw.body)                  # Original body
 
+
         self.formatted_body = raw.body                                    # Formatted body
         self.formatted_body = raw.xhtml unless raw.xhtml.blank?
       end
@@ -87,11 +88,17 @@ module Ariera
           sender = item.jid
         else
           # When sender already leaved the room we must retrieve it from people
-          # TODO Move this to Room::Subscription
-          sender = Blather::JID.new room.people[stripped].identity unless sender
-        end
+          person = room.people[stripped]
 
-        sender
+          if person
+            # TODO Move this to Room::Subscription
+            Blather::JID.new person.identity
+          else
+            # If we can't find a sender in the room
+            # just use the original message sender
+            Blather::JID.new identity
+          end
+        end
       end
     end
   end

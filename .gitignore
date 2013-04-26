@@ -14,6 +14,11 @@ test/tmp
 test/version_tmp
 tmp
 
+# Data sensitive files
+# config/xmpp.yml
+# config/mongoid.yml
+
+
 # YARD artifacts
 .yardoc
 _yardoc

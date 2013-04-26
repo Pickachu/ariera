@@ -7,8 +7,11 @@ gem "foreman"
 gem "activesupport"
 gem "sanitize"
 gem 'text'
-gem 'pry'
 
-group :assets do
+group :development do
+#  gem 'pry-debugger'
+end
+
+group :test do
   gem "rspec"
 end

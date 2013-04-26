@@ -7,7 +7,7 @@ servers:
 development: &defaults
   heitor_gmail:
     <<: *google-server
-    login: heitorsalazar@gmail.com.br
+    login: heitorsalazar@gmail.com
     password: )74193456((74193456)
 production:
   indefinidomatic:

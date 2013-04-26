@@ -33,8 +33,8 @@ module Ariera
         stanza.broadcast
       else
         reply = stanza.reply
-        reply.body = "Voce não está na sala safadinho!"
-        reply.formatted_body = "Voce não está na sala safadinho!"
+        reply.body = "Você não está na sala safadinho!"
+        reply.formatted_body = "Você <b>não está na sala</b> safadinho!"
         reply.deliver
       end
     end
@@ -48,7 +48,7 @@ module Ariera
     # TODO create module listenable
     def listen
       Ariera.message :chat?, :body do |message|
-        receive Ariera::Room::Message.new(self, message)
+        receive Message.new(self, message)
       end
     end
 
@@ -59,14 +59,34 @@ module Ariera
     end
 
     def autoaprove
+      # Consolidate current roster list
+      roster.each do |item|
+        if item.subscription == :none
+          reply = ::Blather::Stanza::Message.new item.jid
+          reply.body = "Por algum motivo misterioso do universo\n você perdeu o contato com a sala, por favor aceite o convite."
+          reply.xhtml = "Por algum motivo misterioso do universo\n você perdeu o contato com a sala, por favor aceite o convite."
+#          write_to_stream reply
+
+          invite = Blather::Stanza::Presence::Subscription.new
+          invite.request!
+          invite.from = identity
+          invite.to = item.jid
+
+          logger.debug "re-requested invite for #{item.jid}"
+
+#          write_to_stream invite
+        end
+      end
+
+      # Automatically accept existing people income requests
       Ariera.subscription :request? do |s|
         listed = Person.where(:identity => s.from.stripped).first
 
-        if (listed)
-          logger.debug "approved subscription request from #{s.from}"
-
+        if listed
           # Add person to room
           add listed
+
+          # Accept invite
           write_to_stream s.approve!
 
           # Welcome message
@@ -75,7 +95,6 @@ module Ariera
           reply.xhtml = "Obrigado por vender a sua <b>alma</b>."
           write_to_stream reply
         else
-          logger.debug "ignored chat request from #{s.from}"
           reply = ::Blather::Stanza::Message.new s.from
           reply.body = "Você não está na lista de pessoas vip."
           reply.xhtml = "Você não está na lista de pessoas vip."
@@ -83,6 +102,8 @@ module Ariera
         end
       end
 
+      # When people are invited and accepts the invitation
+      # adds people to room
       Ariera.subscription :subscribed? do |s|
         reply = ::Blather::Stanza::Message.new s.from
         reply.from = s.to
@@ -104,9 +125,7 @@ module Ariera
 
           write_to_stream reply
         else
-          logger.debug "already subscribed from #{s.from}"
-
-          reply.body = 'Não temos biscoitos aqui.'
+          reply.body  = 'Não temos biscoitos aqui.'
           reply.xhtml = '<span style="color: #eec803;">Não temos biscoitos aqui.</span>'
           write_to_stream reply
         end
@@ -114,17 +133,26 @@ module Ariera
 
       # Someone unsubscribed from the room
       Ariera.subscription :unsubscribed? do |s|
+
+        # TODO remove roster and remove person from room (remove participant)
+        person = Person.where(:identity => s.from.stripped).first
+
+        unless person
+          reply = ::Blather::Stanza::Message.new s.from
+          reply.from = s.to
+          reply.body = "Não foi possivel encontrar a pessoa #{s.from} na sala."
+          next
+        end
+
+        person.room = nil
+        person.save
+
         reply = Blather::Stanza::Message.new
         reply.from = s.from
         reply.body = "Esse chat é muito cansativo pra mim. Serei um desertor."
         reply.xhtml = "Esse chat é muito cansativo pra mim. Serei um <b>desertor</b>."
 
-        # TODO remove roster and remove person from room (remove participant)
-        person = Person.where(:identity => s.from.stripped).first
-        person.room = nil
-        person.save
-
-        receive Ariera::Room::Message.new(self, reply) if in_room? s.from.stripped
+        receive Ariera::Room::Message.new(self, reply)
       end
     end
 
