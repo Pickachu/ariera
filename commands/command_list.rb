@@ -50,6 +50,7 @@ module Commands
         end
       end
 
+      r.xhtml = r.body.gsub("\n", '<br />')
       r
     end
 

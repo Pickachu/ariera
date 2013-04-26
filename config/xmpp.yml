@@ -1,16 +1,14 @@
 servers:
   google: &google-server
     host: talk.google.com
-    port: 5222
+	port: 5222
+  talkr: &talkr-server
+    host: talkr.im
 development: &defaults
-  chat_izap:
+  heitor_gmail:
     <<: *google-server
-    login: chat@izap.com.br
-    password: euamoocussiol
-  heitor_izap:
-    <<: *google-server
-    login: heitor.salazar@izap.com.br
-    password: 74193456
+    login: heitorsalazar@gmail.com.br
+    password: )74193456((74193456)
 production:
   chat_izap:
     <<: *google-server

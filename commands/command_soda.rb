@@ -13,7 +13,7 @@ module Commands
         table << [person.sodas, person.nickname]
       end
 
-      puts table.inspect
+      puts people.inspect
       
       table.sort_by! { |line| line[0] }
       

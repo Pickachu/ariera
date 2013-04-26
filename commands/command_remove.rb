@@ -14,6 +14,15 @@ module Commands
       r = m.reply
 
       case params[:type][:name]
+      when 'purchase'
+        purchase = Purchase.find params[:entity][:modifier]
+        person = purchase.person
+        products = purchase.products
+        if purchase.destroy 
+          r.body = "Compra de #{products.map(&:name).join(', ')} para #{person.nickname} deletada!"
+        else
+          r.body = "Erro ao remover compra"
+        end
       when 'unhandled'
         unhandleds = Unhandled.all.length
 
@@ -23,7 +32,7 @@ module Commands
           r.body = "Erro ao remover mensagens não resolvidas"
         end
       else
-        r.body = "Entidade inexistente ou não implementada para remover: #{params[:entity][:name]}"
+        r.body = "Entidade inexistente ou remoção não implementada: #{params[:type][:name]}"
       end
 
       r

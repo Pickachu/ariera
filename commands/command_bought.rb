@@ -16,13 +16,13 @@ module Commands
       unless entity.blank?
         product = Product.where(:name => entity[:name].downcase).first
 
-        unless product.nil?
+        if product
           purchase = Purchase.new
           purchase.person = sender
           purchase.products << product
 
           if purchase.save
-            "Compra computada com successo."
+            "Compra de #{purchase.products.map(&:name).join(', ')} para #{sender.name} computada."
           else                                  
             "Erro ao criar compra! \n #{purchase.errors.full_messages.join("\n")}."
           end                                        

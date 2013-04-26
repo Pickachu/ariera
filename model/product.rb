@@ -5,7 +5,7 @@ class Product
   validates_uniqueness_of :name
   validates_presence_of :name
                    
-  belongs_to :purchase
+  has_many :purchases
   field :name, type: String 
   field :kind, type: String 
 

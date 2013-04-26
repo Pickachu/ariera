@@ -88,10 +88,6 @@ module Ariera
         else
           # When sender already leaved the room we must retrieve it from people
           # TODO Move this to Room::Subscription
-          puts stripped
-          puts room.people[stripped].inspect
-          puts room.people.inspect
-
           sender = Blather::JID.new room.people[stripped].identity unless sender
         end
 

@@ -23,6 +23,6 @@ class Person
   end
   
   def sodas
-    purchases.where(:product => {:kind => :refrigerante}).count
+    purchases.where(:product_ids => Product.where(:kind => :refrigerante).map(&:id)).count
   end
 end
