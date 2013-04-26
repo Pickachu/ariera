@@ -1,67 +1,71 @@
 # -*- coding: utf-8 -*-
-class CommandSteal
-  include Command
+module Commands
+  class Steal
+    include Command::Commandable
 
-  def initialize
-    @guards = ['roubar .+']
-    @parameters = [:thief, :victim, :reason]
+    guard 'roubar .+'
+    guard 'steal .+'
 
-    listen
-  end
+    parameter :thief
+    parameter :victim
+    parameter :reason
 
-  def execute m, params
-    r = m.reply
-    voter = Person.find_by_name(params[:name].downcase)
-    thief = Person.find_by_name(params[:thief][:name].downcase) unless params[:thief].nil?
-    victim = Person.find_by_name(params[:victim][:name].downcase) unless params[:victim].nil?
+    help :syntax => 'roubar <ladrão> <vítma>', :variants => [:steal], :description => "Rouba 1 ponto de <vítma> e passa para <ladrão>"
 
-    if (voter.name == victim.name)
-      r.body = 'Roubando pontos de si mesmo ein?? Dexa de ser idiota!'
-      return r
-    end
+    handle do |m, params|
+      r = m.reply
+      voter = Person.identified_by(Blather::JID.new(m.from).stripped).first
+      thief = Person.named(params[:thief][:name].downcase).first unless params[:thief].nil?
+      victim = Person.named(params[:victim][:name].downcase).first unless params[:victim].nil?
 
-    if voter 
-      if victim
-        if thief
-          if params[:reason]
-            reason = params[:reason][:name]
+      if (voter.name == victim.name)
+        r.body = 'Roubando pontos de si mesmo ein?? Dexa de ser idiota!'
+        return r
+      end
 
-            pointThief = Point.new
-            pointThief.reason = "Roubando ponto de #{victim.name} por #{reason}."
-            pointThief.amount = +1
-            pointThief.person = voter
+      if voter
+        if victim
+          if thief
+            if params[:reason]
+              reason = params[:reason][:name]
 
-            pointVictim = Point.new
-            pointVictim.reason = "Foi roubado de #{thief.name} por #{reason}."
-            pointVictim.amount = -1
-            pointVictim.person = voter
+              pointThief = Point.new
+              pointThief.reason = "Roubando ponto de #{victim.name} por #{reason}."
+              pointThief.amount = +1
+              pointThief.person = voter
 
-            thief.points << pointThief
-            thief.score += 1
+              pointVictim = Point.new
+              pointVictim.reason = "Foi roubado de #{thief.name} por #{reason}."
+              pointVictim.amount = -1
+              pointVictim.person = voter
 
-            victim.points << pointVictim
-            victim.score -= 1
+              thief.points << pointThief
+              thief.score += 1
 
-            if thief.save && victim.save
-              r.body = "CHUPA! #{thief.name.capitalize}[#{thief.score}] roubou um ponto de #{victim.name.capitalize}[#{victim.score}] por #{reason}"
+              victim.points << pointVictim
+              victim.score -= 1
+
+              if thief.save && victim.save
+                r.body = "CHUPA! #{thief.name.capitalize}[#{thief.score}] roubou um ponto de #{victim.name.capitalize}[#{victim.score}] por #{reason}"
+              else
+                r.body = "Erro ao pontuar pessoa."
+              end
             else
-              r.body = "Erro ao pontuar pessoa."
+              r.body = 'Motivo do crime não informado.'
             end
           else
-             r.body = 'Motivo do crime não informado.'
+            r.body = "Ladrão não encontrado: " + params[:thief][:name]
           end
         else
-         r.body = "Ladrão não encontrado: " + params[:thief][:name]
+          r.body = "Vítima não encontrada: " + params[:victim][:name]
         end
       else
-        r.body = "Vítima não encontrada: " + params[:victim][:name]
+        r.body = "Não levamos a opnião do " + params[:name] + " a sério nesse chat. Voto Inválido."
       end
-    else
-     r.body = "Não levamos a opnião do " + params[:name] + " a sério nesse chat. Voto Inválido."
-    end
 
-   r
+      r
+    end
   end
 end
 
-CommandSteal.new
+Commands::Steal.new

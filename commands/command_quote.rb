@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
-class CommandQuote
-  include Command
+module Commands
+  class Quote
+    include Command::Commandable
 
-  def initialize
-    @guards = ['cita[cç][ãa]o .+', 'quote .+']
-    @parameters = [:type, :entity]
-    listen
-  end
+    guards ['cita[cç][ãa]o .+', 'quote .+']
+    parameter :type
+    parameter :entity
 
-  def execute m, params
-    puts 'executing: quote'
-    r = m.reply
-    r.body = "Comando citação ainda não implementado"
-    r
+    handle do |m, params|
+      r = m.reply
+      r.body = "Comando citação ainda não implementado"
+      r
+    end
   end
 end
 
 # TODO Instantiate classes out of here
-CommandQuote.new
+Commands::Quote.new

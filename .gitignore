@@ -2,6 +2,8 @@
 *.rbc
 .bundle
 .config
+.env
+.rvmrc
 coverage
 InstalledFiles
 lib/bundler/man
@@ -11,7 +13,6 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
-config
 
 # YARD artifacts
 .yardoc
@@ -20,4 +21,5 @@ doc/
 
 # Emacs Files
 *~
-*#
+.#*
+*#*

@@ -1,0 +1,31 @@
+Commandos
+△ - imprimir um triangulo grande
+jump - passar musica
+almoço - voltar a funcionar
+network - pegar dados da rede
+play, music - suportar escolha de musica no grooveshark
+popup - abrir popup no computador de alguem
+poll - abrir uma enquete
+filme - procurar por dados de filme no imdb
+rand - gerar numero aleatorio
+calc - pesquisar resultado da expressao no wolfram
+karaoke - não tenho a menor ideia
+link - abrir link no meu browser
+piada - contar uma piada sobre um assunto [gordos: http://realidade.org/forum/index.php?topic=6606.0]
+
+Easter Eggs
+dunnet - iniciar jogo dunnet
+rock - exibir movimentos do concerto de rock do blue man group
+283 - tocar musica do blue man que representa esse movimento
+
+Features
+calcular distancia leveinstein entre primeiro item de mensagem de texto
+* - multiplicar o texto pelo numero de vezes
+suportar utf8-como alias
+suporte a levels, personagens e ataques de monstros
+alguns comandos podem tocar barulhos do sistema
+izap paga o almoço no dia
+
+
+comando para ver nome científico das pessoas
+comando pokemon numero fala qual pokemon vc é

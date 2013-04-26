@@ -1,10 +1,14 @@
-class Vote < ActiveRecord::Base
+class Vote
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
   belongs_to :votable, :polymorphic => true
   belongs_to :person
 
-  scope :today, where(['updated_at BETWEEN (?) AND (?)', Time.mktime(Time.now.year, Time.now.month, Time.now.day), Time.mktime(Time.now.year, Time.now.month, Time.now.day, 23, 59)])
-  
-  scope :recent, order('updated_at DESC')
+  field :kind, type: String
 
+  scope :today, where(:updated_at => Time.now.midnight..Time.now)
+  scope :by, lambda { |person| where(:person_id => person.id) }
 
+  scope :recent, desc(:updated_at)
 end

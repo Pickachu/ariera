@@ -1,9 +1,16 @@
-Ariera.message :chat?, :body =>  /(\[[^\]]*\] )?domo/i do |m|
-  puts 'executing: domo'
+module Commands
+  class Domo
+    include Command::Commandable
 
-  r = m.reply
-  r.body = 'kun'
-  Ariera.write_to_stream r
+    guard 'domo'
 
-  false
+    handle do |message, params|
+      reply = message.reply
+      reply.body = 'kun'
+      reply
+    end
+  end
 end
+
+# TODO Automatic instatiation of commands
+Commands::Domo.new

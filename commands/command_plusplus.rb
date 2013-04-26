@@ -1,19 +1,35 @@
-Ariera.message :chat?, :body => /[+][\d]/ do |m|
-  puts 'executing: plus plus'
+module Commands
+  class PlusPlus
+    include Command::Commandable
 
-  r = m.reply
-  pluses = m.body.scan /([^\b\s]+)(?=[+][\d])/
+    guard '.*[+]{2}'
 
-  pluses.each do |plus|
-    term = Term.find_or_create_by_term(plus[0])
-    point = Point.new :reason => 'Term ponctuation.'
-    term.points << point
-    term.score += 1
-    
-    if term.save
-      r.body = "\n Woohoo\!\!\! #{term.term} agora com #{term.score} pontos."
+    help :syntax => '<termo>++', :description => 'Adiciona um ponto para <termo>.', :group => :ponctuation
+
+    # TODO Quotation suport
+    handle do |m|
+      pluses = m.body.scan /([^\b\s]+)(?=[+]+)/
+
+      r = m.reply
+      r.body = ''
+
+      pluses.each do |plus|
+        term = Term.find_or_create_by(:name => plus[0].gsub('+', ''))
+        term.points.create :amount => 1, :reason => 'Term ponctuation.'
+
+        term.score ||= 0
+        term.score += 1
+
+
+        if term.save
+          r.body += "\n" unless r.body.blank?
+          r.body += "Yupi\!\!\! #{term.name} agora com #{term.score} pontos"
+        end
+      end
+
+      r
     end
   end
-  
-  Ariera.write_to_stream r
 end
+
+Commands::PlusPlus.new

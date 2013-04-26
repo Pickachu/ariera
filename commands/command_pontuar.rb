@@ -1,48 +1,56 @@
 # -*- coding: utf-8 -*-
-class CommandPonctuate
-  include Command
+module Commands
+  class Ponctuate
+    include Command::Commandable
 
-  def initialize
-    @guards = ['pontuar .+']
-    @parameters = [:person, :reason]
+    guard 'pontuar .+'
+    parameter :person
+    parameter :reason
 
-    listen
-  end
+    help :syntax => 'pontuar <pessoa> <motivo...>', :description => 'Adiciona 1 ponto para <pessoa> por ter feito <motivo>.'
 
-  def execute m, params
-    r = m.reply
-    voter = Person.find_by_name(params[:name].downcase)
-    person = Person.find_by_name(params[:person][:name].downcase) unless params[:person].nil?
-    reason = params[:reason][:name]  unless params[:reason].nil?
+    handle do |m, params|
+      r = m.reply
 
-    if voter
-      if person
-        if reason
-          point = Point.new
-          point.reason = reason
-          point.amount = 1
-          point.person = voter
-          
-          person.points << point
-          person.score += 1		  
-          
-          if person.save
-            r.body = "Woohoo\! #{person.name.capitalize} agora com #{person.score} pontos, por #{point.reason}"
+      voter = Person.where(:identity => Blather::JID.new(m.from).stripped).first
+      person = Person.named(params[:person][:name].downcase).first unless params[:person].nil?
+
+      if params[:reason]
+        params[:reason][:name] += params[:reason][:modifier] unless params[:reason][:modifier].blank?
+        reason = params[:reason][:name]
+      end
+
+      if voter
+        if person
+          if reason
+            point = Point.new
+            point.reason = reason
+            point.amount = 1
+            point.person = voter
+
+            person.points << point
+
+            person.score ||= 0 # TODO callback on adicionar entidade para setar valores padrao
+            person.score += 1
+
+            if person.save
+              r.body = "Woohoo\! #{person.name.capitalize} agora com #{person.score} pontos, por #{point.reason}"
+            else
+              r.body = 'Erro ao pontuar pessoa.'
+            end
           else
-            r.body = 'Erro ao pontuar pessoa'
+            r.body = 'Motivo da pontuação não informado.'
           end
         else
-          r.body = 'Motivo da pontuação não informado.'
+          r.body = "Pessoa não encontrada: #{params[:person][:name]}. \n Para sumonar essa pessoa digite: adicionar pessoa #{params[:person][:name]}\n Para ver todas pessoas: participantes"
         end
       else
-        r.body = 'Pessoa não encontrada: ' + params[:person][:name]
+        r.body = "Votador inválido: #{params[:name]}"
       end
-    else
-      r.body = 'Votador inválido: ' + params[:name]
+
+      r
     end
-    
-    r
   end
 end
 
-CommandPonctuate.new
+Commands::Ponctuate.new

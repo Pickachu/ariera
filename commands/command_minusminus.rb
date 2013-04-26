@@ -1,25 +1,37 @@
-# Ariera.message :chat?, :body => /[-][\d]/ do |m|
-#   puts 'executing: minus minus'
-#   r = m.reply
-#   minuses = m.body.scan /([^\b\s]+)(?=[-][\d])/
-  
-#   minuses.each do |minus|
-#     term = Term.find_or_create_by_term(minus[0])
-#     point = Point.new :reason => 'Term ponctuation.'
-#     point.amount = -1
-#     term.points << point
-#     term.score -= 1
-    
-#     if term.save
-#       if r.body.nil?
-#         r.body = ''
-#       else
-#         r.body += "\n"
-#       end
-      
-#       r.body += "Woohoo\!\!\! #{term.term} agora com [#{term.score}]"
-#     end
-#   end
-  
-#   write_to_stream r
-# end
+module Commands
+  class MinusMinus
+    include Command::Commandable
+
+    guard '.*[-]{2}'
+
+    help :syntax => '<termo>--', :description => 'Remove um ponto para <termo>.', :group => :ponctuation
+
+    # TODO
+    # adium do
+    #   guard '.*[—]'
+    # end
+
+    # TODO Quotation suport
+    handle do |m|
+      minuses = m.body.scan /([^\b\s]+)(?=[-]+)/
+      r = m.reply
+      r.body = ''
+
+      minuses.each do |minus|
+        term = Term.find_or_create_by(:name => minus[0].gsub('-', ''))
+        term.points.create :amount => -1, :reason => 'Term ponctuation.'
+
+        term.score ||= 0
+        term.score -= 1
+
+        if term.save
+          r.body += "\n" unless r.body.blank?
+          r.body += "Ouch\!\!\! #{term.name} agora com #{term.score} pontos"
+        end
+      end
+      r
+    end
+  end
+end
+
+Commands::MinusMinus.new

@@ -1,43 +1,76 @@
+# Syncronise output
+STDOUT.sync = true
+
 # TODO move this things to the initializers folder
-# Frameworks and libraries     
+# Frameworks and libraries
 require 'rubygems'
+require 'sanitize'
 require 'blather'
-require 'active_record'
-ActiveRecord::Base # Bug on active record outside rails
+require 'mongoid'
+require 'active_support/core_ext/date_time/calculations'
 
 # Load configurations
-database = YAML::load(File.open(File.expand_path('config/database.yaml')))
-xmpp = YAML::load(File.open(File.expand_path('config/xmpp.yaml')))
-ENVIRONMENT = 'development'
-                                               
-# Syncronise output
-$stdout.sync = true
+xmpp = YAML::load(File.open(File.expand_path('config/xmpp.yml')))
 
-# Active Record Configuration
-ActiveRecord::Base.establish_connection(database[ENVIRONMENT])
+ENVIRONMENT = ENV['ENVIRONMENT']
+ACCOUNT = ENV['ACCOUNT']
+DEBUG = ENV['DEBUG']
 
-#ActiveRecord::Base.logger = Logger.new(STDERR)
+# Mongoid Configuration
+Mongoid.load!('config/mongoid.yml')
 
-# Active Record Models
-require 'model/person.rb'
-require 'model/point.rb'
-require 'model/term.rb'
-require 'model/food_establishment.rb'
-require 'model/vote.rb'
-require 'model/poll.rb'
-require 'model/cowboy.rb'
-require 'model/rule.rb'
+# Mongoid Models
+require_relative 'model/point'
+require_relative 'model/term'
+require_relative 'model/food_establishment'
+require_relative 'model/vote'
+require_relative 'model/product'
+require_relative 'model/purchase'
+require_relative 'model/poll'
+require_relative 'model/cowboy'
+require_relative 'model/rule'
+require_relative 'model/unhandled'
+require_relative 'model/room'
 
 # Library Items
-require 'library/ariera.rb' 
-require 'library/command.rb'
-require 'library/action.rb'
+$LOAD_PATH << File.expand_path('library')
+
+require 'blather/sasl.rb'
+require 'ariera'
+require 'command'
+require 'action'
+
+autoload :Subscription, File.expand_path('model/subscription')
+autoload :Person, File.expand_path('model/person')
+autoload :Room, 'model/room'
+autoload :X, 'stanz/xa'
+
+Ariera.autoload :Room, File.expand_path('library/room')
+# encoding: UTF-8
+Ariera.autoload :Unhandled, File.expand_path('model/unhandled')
+Ariera::Room.autoload :Message, File.expand_path('library/room/message')
+Ariera::Room.autoload :Command, File.expand_path('library/room/command')
 
 
-autoload :Room, 'library/room'
-autoload :X, 'library/stanz/xa'
+raise "No environment set." if ENVIRONMENT.blank?
+raise "Configuration for enviroment #{ENVIRONMENT} not found." unless xmpp.has_key? ENVIRONMENT
+raise "Account #{ACCOUNT} not found for enviroment #{ENVIRONMENT}." unless xmpp[ENVIRONMENT].has_key? ACCOUNT
+
 
 Ariera.configuration = {
-  :database => database[ENVIRONMENT], 
-  :xmpp => xmpp[ENVIRONMENT]
+  :xmpp => xmpp[ENVIRONMENT][ACCOUNT],
+  :mode => :room
 }
+
+# Activate debuging
+if DEBUG
+  Ariera.logger = Logger.new $stdout
+  Blather.logger = Logger.new $stdout
+end
+
+case ENVIRONMENT
+when 'development'
+when 'staging'
+  Ariera.logger = Logger.new $stdout
+  Blather.logger = Logger.new $stdout
+end
