@@ -7,6 +7,7 @@ gem "foreman"
 gem "activesupport"
 gem "sanitize"
 gem 'text'
+gem 'pry'
 
 group :assets do
   gem "rspec"

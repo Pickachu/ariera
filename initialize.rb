@@ -6,6 +6,7 @@ STDOUT.sync = true
 require 'rubygems'
 require 'sanitize'
 require 'blather'
+require 'pry'
 require 'mongoid'
 require 'active_support/core_ext/date_time/calculations'
 

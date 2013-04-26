@@ -33,10 +33,10 @@ module Command
 
       # TODO Implement before filter
       message :chat?, normalized_guards(guards) do |message|
-        
+
         # Store message
         @message = message
-                   
+
         # Store command name
         command_name = self.class.to_s
         logger.info "#{message.from}##{command_name}: #{message.body}"
@@ -132,7 +132,7 @@ module Command
     # Person utility
     def sender
       @sender ||= Person.identified_by(Blather::JID.new(@message.from).stripped).first
-    end                                                  
+    end
 
     private
 
