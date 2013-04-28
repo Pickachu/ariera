@@ -18,6 +18,9 @@ tmp
 config/xmpp.yml
 config/mongoid.yml
 
+# OSX Files
+.DS_Store
+
 
 # YARD artifacts
 .yardoc

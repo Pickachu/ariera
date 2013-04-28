@@ -9,7 +9,7 @@ gem "sanitize"
 gem 'text'
 
 group :development do
-#  gem 'pry-debugger'
+  gem 'pry-debugger'
 end
 
 group :test do

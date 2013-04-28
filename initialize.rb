@@ -65,13 +65,13 @@ Ariera.configuration = {
 
 # Activate debuging
 if DEBUG
-  Ariera.logger = Logger.new $stdout
+  Ariera.logger  = Logger.new $stdout
   Blather.logger = Logger.new $stdout
 end
 
 case ENVIRONMENT
 when 'development'
 when 'staging'
-  Ariera.logger = Logger.new $stdout
+  Ariera.logger  = Logger.new $stdout
   Blather.logger = Logger.new $stdout
 end
