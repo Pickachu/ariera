@@ -14,11 +14,11 @@ module Commands
         params[:poll][:name] += params[:poll][:modifier] unless params[:poll][:modifier].blank?
       end
 
-      poll = Poll.new params[:poll]
+      poll = ::Poll.new params[:poll]
 
       unless poll.name.nil?
 
-        if Poll.frank.exists?
+        if ::Poll.frank.exists?
           r.body = 'Ainda existem enquetes abertas. Enquetes não podem ser abertas.'
           next r
         elsif subcommand? poll.name
@@ -45,7 +45,7 @@ module Commands
       end
 
       # Ver enquete atual
-      poll = Poll.frank.first
+      poll = ::Poll.frank.first
       unless poll.nil?
         r.body = results poll
       else
@@ -57,7 +57,7 @@ module Commands
 
     subcommand :close, %w{fechar close} do |message, params|
       r = message.reply
-      poll = Poll.frank.first
+      poll = ::Poll.frank.first
 
       if poll
         creator = Person.identified_by(Blather::JID.new(message.from).stripped).first
@@ -85,7 +85,7 @@ module Commands
     subcommand :yes, %w{sim yes} do |message, params|
       reply = message.reply
 
-      poll = Poll.frank.first
+      poll = ::Poll.frank.first
       person = Person.identified_by(Blather::JID.new(message.from).stripped).first
 
       unless person.nil?
@@ -107,7 +107,7 @@ module Commands
     subcommand :no, %w{no n[ãa]o} do |message, params|
       reply = message.reply
 
-      poll = Poll.frank.first
+      poll = ::Poll.frank.first
       person = Person.identified_by(Blather::JID.new(message.from).stripped).first
 
       unless person.nil?

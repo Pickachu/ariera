@@ -38,13 +38,19 @@ module Ariera
 
     # include commands
     Dir["commands/*.rb"].each {|file| require_relative "../#{file}"}
-    Dir["commands/room/*.rb"].each {|file| require_relative "../#{file}"}
 
     # create a room
-    # Room.new 'domo'
 
+    # TODO move this to initializers
     if configuration[:mode] == :room
       self.room = Room.new jid
+
+      # include room commands
+      Dir["commands/room/*.rb"].each {|file| require_relative "../#{file}"}
+
+      # We must set listeners as the last thing, or
+      # all handlers after that will be overridden
+      self.room.listen
     end
 
     # listen for unhandled commands
@@ -52,7 +58,7 @@ module Ariera
   end
 
   message do |m|
-    puts 'received' + m.inspect
+    puts format("\n--\n%s", m.inspect[0..500])
   end
 
   def self.configuration=(value)

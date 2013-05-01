@@ -54,7 +54,6 @@ module Ariera
 
           # Do not broadcast to self
           next if (sender_jid  == receiver_jid.stripped)
-          next unless item.jid.to_s.include? '@'              # TODO Discover why some jids are coming as pseudonyns
 
           stanza.to = receiver_jid
           deliver

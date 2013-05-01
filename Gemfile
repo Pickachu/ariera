@@ -7,6 +7,7 @@ gem "foreman"
 gem "activesupport"
 gem "sanitize"
 gem 'text'
+gem 'workflow'
 
 group :development do
   gem 'pry-debugger'

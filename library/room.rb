@@ -1,6 +1,7 @@
 # encoding: utf-8
 module Ariera
   class Room
+
     # Move to module Ariera::Client::DSL
     delegate :message, :write_to_stream, :my_roster, :logger, :shell, :to => Ariera
     alias_method :roster, :my_roster
@@ -12,12 +13,12 @@ module Ariera
     alias_method :record, :room
     alias_method :record=, :room=
 
-    def initialize identity
+    def initialize identity, &block
       logger.debug "initialzing room #{identity}"
+
       @room = ::Room.find_or_create_by :identity => identity.stripped
 
       initialize_people
-      listen
       autoaprove
     end
 
@@ -25,10 +26,7 @@ module Ariera
       if in_room? stanza.sender
 
         # Prefix with sender name unless is a command
-        unless stanza.kind_of? Command
-          stanza.body = "[#{stanza.pseudonym}] #{stanza.body}"
-          stanza.formatted_body = "<span style=\"color: #666666;\"><b>#{stanza.pseudonym}</b></span>: #{stanza.formatted_body}" # Prefix with sender name
-        end
+        format_message stanza unless stanza.kind_of? Command
 
         stanza.broadcast
       else
@@ -37,6 +35,11 @@ module Ariera
         reply.formatted_body = "Você <b>não está na sala</b> safadinho!"
         reply.deliver
       end
+    end
+
+    def format_message stanza
+      stanza.body = "[#{stanza.pseudonym}] #{stanza.body}"
+      stanza.formatted_body = "<span style=\"color: #666666;\"><b>#{stanza.pseudonym}</b></span>: #{stanza.formatted_body}" # Prefix with sender name
     end
 
     def in_room? identity

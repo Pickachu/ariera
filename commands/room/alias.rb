@@ -3,6 +3,8 @@ module Ariera
   class Room
     class Alias
       include ::Command::Commandable
+      # TODO include automatically for commands in Room namespace ::Command::Room::Commandable
+
       delegate :my_roster, :write_to_stream, :to => Ariera
       alias_method :roster, :my_roster
 
@@ -12,6 +14,7 @@ module Ariera
       handle do |message, params|
         reply = message.reply
 
+        # TODO create params[:pseudonym].to_s to return the full parameter
         guest = params[:pseudonym][:name]
         guest += params[:pseudonym][:modifier] unless params[:pseudonym][:modifier].blank?
 
@@ -28,6 +31,7 @@ module Ariera
         roster.push item
       end
 
+      # TODO move to model
       def pseudonymize pseudonym, identity
         person = ::Person.any_of({:pseudonym => pseudonym}, {:name => pseudonym}, {:identity => identity}).first
 
@@ -77,4 +81,5 @@ module Ariera
   end
 end
 
+# TODO CHange to Ariera::Room::Commands::Alias.new
 Ariera::Room::Alias.new

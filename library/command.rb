@@ -1,5 +1,6 @@
 module Command
   module Commandable
+    # TODO Move to the listenting logic
     PREFIX = '^(?:\[[^\]]+\] )?'
     MEMBER = /'(?<name>[^\']*)'\s?|"(?<name>[^\"]*)"\s?|(?<name>[[:alpha:]]+)?(?<modifier>[^\s]*)\s?/i
 
@@ -15,16 +16,21 @@ module Command
     end
 
     def initialize
-      @guards = self.class.guards
-      @subcommands = self.class.subcommands
-      @subcommands ||= {}
-      @parameters = self.class.parameters
-      @parameters ||= []
-      @parameters.unshift :command # First parameter is aways the command name
-      activate_subcommands *@subcommands.keys
+      run_callbacks :initialize do
+        @guards = self.class.guards
+
+        @subcommands = self.class.subcommands
+        @subcommands ||= {}
+
+        @parameters = self.class.parameters
+        @parameters ||= []
+        @parameters.unshift :command # First parameter is aways the command name
+      end
+
       listen self.class.handler
     end
 
+    # TODO Move listening logic to external file
     def listen guards = @guards, handler
       return false unless guarded?
       throw "Handler not defined for command" if self.class.handler.nil?
@@ -73,12 +79,16 @@ module Command
             # Broadcast command result and user message to other people
             if Ariera.configuration[:mode] === :room
 
-              # Broadcast user message
-              Ariera.room.receive Ariera::Room::Message.new(Ariera.room, message)
+              run_callbacks :receive do
 
-              # Switch body to broadcast Command
-              message.body = reply.body
-              Ariera.room.receive(Ariera::Room::Command.new(Ariera.room, message, output))
+                # Broadcast user message
+                Ariera.room.receive Ariera::Room::Message.new(Ariera.room, message)
+
+                # Switch body to broadcast Command
+                message.body = reply.body
+                Ariera.room.receive(Ariera::Room::Command.new(Ariera.room, message, output))
+
+              end
             end
           end
         rescue Exception => e
@@ -100,6 +110,7 @@ module Command
       logger.debug 'Command: listening to ' + normalized_guards(guards).inspect
     end
 
+    # TODO Move guarding logic to external file
     def guard *arguments, &block
       message :chat?, normalized_guards(arguments), &block
     end
@@ -108,6 +119,7 @@ module Command
       clear_handlers :message, normalized_guards(arguments)
     end
 
+    # TODO Move subcommand logic to external file
     # Subcommand and contextual guarding management
 
     def activate_subcommands *subcommands
@@ -214,12 +226,31 @@ module Command
       def handled?; handled; end;
 
       def included(base)
-        base.extend(ClassMethods)
+        base.send :include, ActiveSupport::Callbacks
+        base.send :define_callbacks, :initialize
+        base.send :define_callbacks, :receive
+
+        base.send :extend , ClassMethods
       end
     end
 
     # Command class methods to add
     module ClassMethods
+      # TODO move to external file CallbacksDefinition?
+      def after_receive *methods
+        methods.each do |method|
+          set_callback :receive, :after, method
+        end
+      end
+
+      def after_initialize *methods
+        methods.each do |method|
+          set_callback :initialize, :after, method
+        end
+      end
+
+
+      # TODO Move to external file Base of room?
       attr_accessor :parameters, :handler, :help, :subcommands
 
       def in_room
@@ -257,10 +288,17 @@ module Command
         @handler = handler
       end
 
+      # TODO Move subcommand logic to external file
       # Subcommand and contextual guarding management
       def subcommand name, guards, &handler
         @subcommands ||= {}
         @subcommands[name] = {:guards => guards, :handler => handler}
+      end
+
+      def activate_subcommand name
+        subcommand = @subcommands[name]
+        listen subcommand[:guards], subcommand[:handler]
+        logger.debug 'Subcommand: listening to ' + normalized_guards(subcommand[:guards]).inspect
       end
     end
   end

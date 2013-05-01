@@ -38,9 +38,10 @@ module Commands
 
         slices = []
         Commands.constants.each_slice(3) { |slice| slices << slice.map(&:downcase).join(', ') }
+        Ariera::Room.constants.each_slice(3) { |slice| slices << slice.map(&:downcase).join(', ') }
         commands_list = slices.join("\n")
         formatted_commands_list = slices.join("<br />")
-
+xo
         body = "Digite ajuda nome_do_comando para saber mais sobre o comando. \n"
         body += "Os parâmetros devem ser digitados sem '<' e '>'. Lista de comandos: \n"
         body += commands_list
