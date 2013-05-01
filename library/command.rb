@@ -294,12 +294,6 @@ module Command
         @subcommands ||= {}
         @subcommands[name] = {:guards => guards, :handler => handler}
       end
-
-      def activate_subcommand name
-        subcommand = @subcommands[name]
-        listen subcommand[:guards], subcommand[:handler]
-        logger.debug 'Subcommand: listening to ' + normalized_guards(subcommand[:guards]).inspect
-      end
     end
   end
 end
